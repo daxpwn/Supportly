@@ -1,3 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
-
-@import 'tailwindcss';
+/* Global styles.
+   The Chain App Dev template ships its own full stylesheet (loaded from index.html:
+   bootstrap + templatemo-chain-app-dev.css + animated.css + owl.css), so Tailwind's
+   preflight reset is intentionally NOT imported here — it would override the template's
+   base typography/spacing. Re-add `@import 'tailwindcss';` if you migrate the UI to Tailwind. */

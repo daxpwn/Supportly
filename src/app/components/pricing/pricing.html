@@ -1,0 +1,35 @@
+<div id="pricing" class="pricing-tables">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="section-heading">
+          <h4>We Have The Best Pre-Order <em>Prices</em> You Can Get</h4>
+          <img src="assets/images/heading-line-dec.png" alt="" />
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eismod tempor incididunt ut labore et dolore magna.
+          </p>
+        </div>
+      </div>
+      @for (plan of plans; track plan.title) {
+        <div class="col-lg-4">
+          <div [class]="plan.variant">
+            <span class="price">{{ plan.price }}</span>
+            <h4>{{ plan.title }}</h4>
+            <div class="icon">
+              <img src="assets/images/pricing-table-01.png" alt="" />
+            </div>
+            <ul>
+              @for (feature of plan.features; track feature.label) {
+                <li [class.non-function]="!feature.enabled">{{ feature.label }}</li>
+              }
+            </ul>
+            <div class="border-button">
+              <a href="#">Purchase This Plan Now</a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

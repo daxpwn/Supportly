@@ -1,0 +1,40 @@
+<header
+  class="header-area header-sticky"
+  [class.background-header]="scrolled()"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <nav class="main-nav">
+          <!-- Logo -->
+          <a href="#top" class="logo" (click)="scrollTo($event, 'top')">
+            <img src="assets/images/logo.png" alt="Chain App Dev" />
+          </a>
+          <!-- Menu -->
+          <ul class="nav" [style.display]="menuOpen() ? 'block' : null">
+            @for (link of links; track link.id) {
+              <li class="scroll-to-section">
+                <a
+                  [href]="'#' + link.id"
+                  [class.active]="activeSection() === link.id"
+                  (click)="scrollTo($event, link.id)"
+                  >{{ link.label }}</a
+                >
+              </li>
+            }
+            <li>
+              <div class="gradient-button">
+                <a id="modal_trigger" href="#modal" (click)="openSignIn($event)">
+                  <i class="fa fa-sign-in-alt"></i> Sign In Now
+                </a>
+              </div>
+            </li>
+          </ul>
+          <a class="menu-trigger" [class.active]="menuOpen()" (click)="toggleMenu()">
+            <span>Menu</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>

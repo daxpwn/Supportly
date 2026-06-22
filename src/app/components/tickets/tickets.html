@@ -4,13 +4,29 @@
     <p>This is the Tickets page.</p>
 
     <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="w-full py-3 max-w-sm min-w-[200px]">
+      <input
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+        class="..."
+        placeholder="Search...">
+      </div>
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Ticket List</h2>
         <ul class="divide-y divide-gray-200">
-            @for (ticket of tickets(); track ticket.id) {
-                <li class="py-4 flex items-center justify-between">
-                <span class="text-gray-600">Ticket #{{ ticket.id }}</span>
-                <span class="text-gray-500">{{ ticket.status }}</span>
-                </li>
+            @for (ticket of filteredTickets(); track ticket.id) {
+              <li>
+                <a
+                  [routerLink]="['/tickets', ticket.id]"
+                  class="py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                >
+                  <span class="flex flex-col">
+                    <span class="text-gray-800 font-medium">{{ ticket.subject }}</span>
+                    <span class="text-xs text-gray-400">{{ ticket.ticketNumber }}</span>
+                  </span>
+                  <span class="text-gray-500">{{ ticket.status }} | {{ ticket.priority }}</span>
+
+                </a>
+              </li>
             }
         </ul>
     </div>

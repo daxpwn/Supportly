@@ -7,28 +7,17 @@
       <div class="col-12">
         <nav class="main-nav">
           <!-- Logo -->
-          <a href="#top" class="logo" (click)="scrollTo($event, 'top')">
+          <a routerLink="/" class="logo">
             <img src="assets/images/logo.png" alt="Chain App Dev" />
           </a>
           <!-- Menu -->
           <ul class="nav" [style.display]="menuOpen() ? 'block' : null">
-            @for (link of links; track link.id) {
-              <li class="scroll-to-section">
-                <a
-                  [href]="'#' + link.id"
-                  [class.active]="activeSection() === link.id"
-                  (click)="scrollTo($event, link.id)"
-                  >{{ link.label }}</a
-                >
-              </li>
+            <li class="scroll-to-section"><a routerLink="/author">Author</a></li>
+            @if (isLoggedIn()) {
+              <li class="scroll-to-section"><a href="#" (click)="logout($event)">Logout</a></li>
+            } @else {
+              <li class="scroll-to-section"><a routerLink="/login">Login</a></li>
             }
-            <li>
-              <div class="gradient-button">
-                <a id="modal_trigger" href="#modal" (click)="openSignIn($event)">
-                  <i class="fa fa-sign-in-alt"></i> Sign In Now
-                </a>
-              </div>
-            </li>
           </ul>
           <a class="menu-trigger" [class.active]="menuOpen()" (click)="toggleMenu()">
             <span>Menu</span>

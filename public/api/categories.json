@@ -1,0 +1,8 @@
+[
+  { "id": 1, "name": "Hardver", "parentId": null },
+  { "id": 2, "name": "Softver", "parentId": null },
+  { "id": 3, "name": "Mreža", "parentId": null },
+  { "id": 4, "name": "Štampači", "parentId": 1 },
+  { "id": 5, "name": "Email", "parentId": 2 },
+  { "id": 6, "name": "Pristup i nalozi", "parentId": 2 }
+]

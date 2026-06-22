@@ -1,0 +1,7 @@
+[
+  { "id": 1, "name": "Otvoren", "isClosed": false },
+  { "id": 2, "name": "U obradi", "isClosed": false },
+  { "id": 3, "name": "Čeka korisnika", "isClosed": false },
+  { "id": 4, "name": "Rešen", "isClosed": true },
+  { "id": 5, "name": "Zatvoren", "isClosed": true }
+]

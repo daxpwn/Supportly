@@ -7,75 +7,48 @@ import {
   signal,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { ModalService } from '../../services/modal.service';
-
-interface NavLink {
-  id: string;
-  label: string;
-}
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 /**
- * Sticky header + main navigation.
- * Replaces the jQuery behaviour from custom.js: sticky `background-header` on
- * scroll, mobile menu slide-toggle, smooth scroll-to-section and scroll-spy.
+ * Sticky header + glavna navigacija.
+ * Sticky `background-header` na skrol; mobilni meni slide-toggle; login modal.
  */
 @Component({
   selector: 'app-header',
+  imports: [RouterLink],
   templateUrl: './header.html',
 })
 export class HeaderComponent {
-  private readonly modal = inject(ModalService);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
-  readonly links: readonly NavLink[] = [
-    { id: 'top', label: 'Home' },
-    { id: 'services', label: 'Services' },
-    { id: 'about', label: 'About' },
-    { id: 'pricing', label: 'Pricing' },
-    { id: 'newsletter', label: 'Newsletter' },
-  ];
+  /** Da li je korisnik ulogovan (signal iz AuthService). */
+  readonly isLoggedIn = this.auth.isLoggedIn;
 
   readonly scrolled = signal(false);
   readonly menuOpen = signal(false);
-  readonly activeSection = signal('top');
 
   constructor() {
-    // Set the correct sticky/active state once the DOM exists (browser only).
+    // Postavi tačno sticky stanje kad DOM postoji (samo u browseru).
     afterNextRender(() => this.onScroll());
   }
 
   @HostListener('window:scroll')
   onScroll(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
     this.scrolled.set(window.scrollY > 80);
-
-    const offset = window.scrollY + 1;
-    for (const link of this.links) {
-      const el = document.getElementById(link.id);
-      if (!el) continue;
-      const top = el.offsetTop;
-      if (top <= offset && top + el.offsetHeight > offset) {
-        this.activeSection.set(link.id);
-      }
-    }
   }
 
   toggleMenu(): void {
     this.menuOpen.update((open) => !open);
   }
 
-  scrollTo(event: Event, id: string): void {
-    event.preventDefault();
-    this.activeSection.set(id);
-    this.menuOpen.set(false);
-    if (!isPlatformBrowser(this.platformId)) return;
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  openSignIn(event: Event): void {
+  logout(event: Event): void {
     event.preventDefault();
     this.menuOpen.set(false);
-    this.modal.open();
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

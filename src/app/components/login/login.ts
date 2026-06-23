@@ -20,8 +20,21 @@ export class LoginComponent {
 
   onSubmit() {
     this.error.set('');
+    
     if(this.email.trim() === '' || this.password.trim() === '') {
       this.error.set('Email and password are required');
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!emailPattern.test(this.email.trim())) {
+      this.error.set('Please enter a valid email address');
+      return;
+    }
+
+    if (this.password.length < 6) {
+      this.error.set('Password must be at least 6 characters long');
       return;
     }
 

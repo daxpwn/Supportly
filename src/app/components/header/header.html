@@ -12,12 +12,13 @@
           </a>
           <!-- Menu -->
           <ul class="nav" [style.display]="menuOpen() ? 'block' : null">
-            <li class="scroll-to-section"><a routerLink="/author">Author</a></li>
             @if (isLoggedIn()) {
+              <li class="scroll-to-section"><a routerLink="/dashboard">Dashboard</a></li>
               <li class="scroll-to-section"><a href="#" (click)="logout($event)">Logout</a></li>
             } @else {
               <li class="scroll-to-section"><a routerLink="/login">Login</a></li>
             }
+            <li class="scroll-to-section"><a routerLink="/author">Author</a></li>
           </ul>
           <a class="menu-trigger" [class.active]="menuOpen()" (click)="toggleMenu()">
             <span>Menu</span>

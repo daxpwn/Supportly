@@ -1,4 +1,4 @@
-import { Component, afterNextRender, inject, signal, computed } from '@angular/core';
+import { Component, afterNextRender, inject, signal, computed, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Ticket, TicketsService } from '../../services/tickets.service';
 
@@ -14,6 +14,8 @@ export class Tickets {
   readonly tickets = signal<Ticket[]>([]);
   readonly loading = signal(true);
   readonly error = signal('');
+  readonly pageSize = 10;
+  readonly currentPage = signal(1);
 
   searchTerm = signal('');
 
@@ -32,8 +34,33 @@ export class Tickets {
     );
   });
 
+  readonly paginatedTickets = computed(() => {
+  const all = this.filteredTickets();
+  const start = (this.currentPage() - 1) * this.pageSize;
+  return all.slice(start, start + this.pageSize);
+  });
+
+  readonly totalPages = computed(() =>
+    Math.ceil(this.filteredTickets().length / this.pageSize)
+  );
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update((p) => p + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update((p) => p - 1);
+    }
+  }
 
   constructor() {
+    effect(() => {
+      this.searchTerm();
+      this.currentPage.set(1);
+    });
     afterNextRender(() => {
       this.ticketsService.getTickets().subscribe({
         next: (data) => {

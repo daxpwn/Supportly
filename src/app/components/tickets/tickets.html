@@ -13,7 +13,7 @@
       </div>
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Ticket List</h2>
         <ul class="divide-y divide-gray-200">
-            @for (ticket of filteredTickets(); track ticket.id) {
+            @for (ticket of paginatedTickets(); track ticket.id) {
               <li>
                 <a
                   [routerLink]="['/tickets', ticket.id]"
@@ -29,6 +29,11 @@
               </li>
             }
         </ul>
+        <div class="flex items-center justify-between mt-4">
+          <button (click)="prevPage()" [disabled]="currentPage() === 1">Prevouse</button>
+          <span>Page {{ currentPage() }} / {{ totalPages() }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+        </div>
     </div>
   </div>
 </div>

@@ -13,3 +13,10 @@
    unlayered lets class specificity (.p-8 = 0,1,0) win over the element reset (div = 0,0,1). */
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css';
+
+/* Constrain the header logo (727x203 source) to the 100px header bar. */
+.header-area .main-nav .logo img {
+  height: 40px;
+  width: auto;
+  vertical-align: middle;
+}

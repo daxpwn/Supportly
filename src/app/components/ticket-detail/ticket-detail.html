@@ -43,6 +43,28 @@
             }
           </ul>
         }
+
+        <div class="py-4">
+          <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+              <div class="flex flex-col space-y-2">
+                  <label class="text-sm text-zinc-700">Comment</label>
+                  <textarea formControlName="body" placeholder="Enter your message" class="rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-400 h-24 resize-none"></textarea>
+              </div>
+
+              <div class="flex items-center gap-2 py-4">
+                  <input type="checkbox" formControlName="isInternal" id="onlyAgents">
+                  <label class="text-xs text-zinc-950" for="onlyAgents">Only agents can see this message</label>
+              </div>
+
+              @if (commentError()) {
+                <p class="mb-2 text-sm text-red-600">{{ commentError() }}</p>
+              }
+
+              <button [disabled]="commentForm.invalid" class="w-full bg-zinc-950 text-white text-sm py-3 rounded-full hover:bg-zinc-800 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                  Submit
+              </button>
+            </form>
+        </div>
       </div>
     }
   </div>

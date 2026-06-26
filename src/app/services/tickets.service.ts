@@ -54,5 +54,15 @@ export class TicketsService {
       : `${environment.apiUrl}/tickets/${ticketId}/comments`;
     return this.http.get<TicketComment[]>(url);
   }
+
+  addComment(
+    ticketId: number,
+    comment: { body: string; isInternal: boolean },
+  ): Observable<TicketComment> {
+    return this.http.post<TicketComment>(
+      `${environment.apiUrl}/tickets/${ticketId}/comments`,
+      comment,
+    );
+  }
 }
 

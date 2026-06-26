@@ -8,6 +8,11 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  email: string;
+  password: string;
+}
+
 export interface LoginResponse {
   token: string;
   refreshToken: string;
@@ -27,6 +32,13 @@ export class LoginService {
 
     return this.http.post<LoginResponse>(
       `${environment.apiUrl}/auth/login`,
+      creds,
+    );
+  }
+
+  register(creds: RegisterRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      `${environment.apiUrl}/auth/register`,
       creds,
     );
   }

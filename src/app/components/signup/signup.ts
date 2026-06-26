@@ -1,17 +1,18 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { AuthService } from '../../services/auth.service';
-import { Router, RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-signup',
   imports: [FormsModule, RouterLink],
-  templateUrl: './login.html',
+  templateUrl: './signup.html',
 })
-export class LoginComponent {
+export class SignupComponent {
   email = '';
   password = '';
+  confirmPassword = '';
   error = signal('');
 
   private readonly loginService = inject(LoginService);
@@ -20,14 +21,17 @@ export class LoginComponent {
 
   onSubmit() {
     this.error.set('');
-    
-    if(this.email.trim() === '' || this.password.trim() === '') {
-      this.error.set('Email and password are required');
+
+    if (
+      this.email.trim() === '' ||
+      this.password.trim() === '' ||
+      this.confirmPassword.trim() === ''
+    ) {
+      this.error.set('All fields are required');
       return;
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
     if (!emailPattern.test(this.email.trim())) {
       this.error.set('Please enter a valid email address');
       return;
@@ -38,15 +42,20 @@ export class LoginComponent {
       return;
     }
 
+    if (this.password !== this.confirmPassword) {
+      this.error.set('Passwords do not match');
+      return;
+    }
+
     this.loginService
-      .login({ email: this.email, password: this.password })
+      .register({ email: this.email, password: this.password })
       .subscribe({
         next: (res) => {
           this.auth.setToken(res.token);
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
-          this.error.set('Invalid email or password');
+          this.error.set('Registration failed. Please try again later.');
           console.error(err);
         },
       });

@@ -8,12 +8,13 @@
         <nav class="main-nav">
           <!-- Logo -->
           <a routerLink="/" class="logo">
-            <img src="assets/images/logo.png" alt="Chain App Dev" />
+            <img src="assets/images/logo-supp.png" alt="Supportly" />
           </a>
           <!-- Menu -->
           <ul class="nav" [style.display]="menuOpen() ? 'block' : null">
             @if (isLoggedIn()) {
               <li class="scroll-to-section"><a routerLink="/dashboard">Dashboard</a></li>
+              <li class="scroll-to-section"><a routerLink="/profile">Profile</a></li>
               <li class="scroll-to-section"><a href="#" (click)="logout($event)">Logout</a></li>
             } @else {
               <li class="scroll-to-section"><a routerLink="/login">Login</a></li>

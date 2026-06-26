@@ -1,0 +1,61 @@
+<div class="min-h-screen bg-gray-100 px-4 pt-28 pb-12">
+  <div class="mx-auto max-w-3xl">
+    <h1 class="mb-6 text-3xl font-bold text-gray-800">My Profile</h1>
+
+    @if (profile(); as p) {
+      <!-- Pregled -->
+      <div class="rounded-xl bg-white p-6 shadow">
+        <div class="flex items-center gap-4">
+          <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-2xl font-bold text-white">
+            {{ name().charAt(0) }}
+          </div>
+          <div>
+            <p class="text-xl font-semibold text-gray-900">{{ name() }}</p>
+            <p class="text-sm text-gray-500">{{ email() }}</p>
+            @if (role() !== '—') {
+              <span class="mt-1 inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                {{ role() }}
+              </span>
+            }
+          </div>
+        </div>
+
+        @if (issuedAt() || expiresAt()) {
+          <div class="mt-6 grid grid-cols-1 gap-4 border-t border-gray-100 pt-4 sm:grid-cols-2">
+            @if (issuedAt(); as iat) {
+              <div>
+                <p class="text-xs uppercase tracking-wide text-gray-400">Token izdat</p>
+                <p class="text-sm text-gray-700">{{ iat | date: 'dd.MM.yyyy. HH:mm' }}</p>
+              </div>
+            }
+            @if (expiresAt(); as exp) {
+              <div>
+                <p class="text-xs uppercase tracking-wide text-gray-400">Token ističe</p>
+                <p class="text-sm text-gray-700">{{ exp | date: 'dd.MM.yyyy. HH:mm' }}</p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Svi claim-ovi iz tokena -->
+      <div class="mt-6 rounded-xl bg-white p-6 shadow">
+        <h2 class="mb-4 text-lg font-semibold text-gray-900">Podaci iz tokena</h2>
+        <dl class="divide-y divide-gray-100">
+          @for (claim of p | keyvalue; track claim.key) {
+            <div class="flex flex-col gap-1 py-3 sm:flex-row sm:justify-between sm:gap-4">
+              <dt class="break-all text-sm font-medium text-gray-500">{{ claim.key }}</dt>
+              <dd class="break-all text-sm text-gray-900 sm:text-right">{{ claim.value }}</dd>
+            </div>
+          }
+        </dl>
+      </div>
+    } @else {
+      <div class="rounded-xl bg-white p-6 shadow">
+        <p class="text-sm text-gray-500">
+          Nema dostupnih podataka o profilu. Prijavite se da biste videli svoj profil.
+        </p>
+      </div>
+    }
+  </div>
+</div>

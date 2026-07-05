@@ -10,6 +10,8 @@ import { TicketDetailComponent } from './components/ticket-detail/ticket-detail'
 import { ApplyTicketComponent } from './components/apply-ticket/apply-ticket';
 import { MyTicketsComponent } from './components/my-tickets/my-tickets';
 import { ProfileComponent } from './components/profile/profile';
+import { UsersComponent } from './components/users/users';
+import { UserEditComponent } from './components/user-edit/user-edit';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -22,5 +24,7 @@ export const routes: Routes = [
   { path: 'tickets', component: Tickets, canActivate: [authGuard, roleGuard('admin')] },
   { path: 'tickets/new', component: ApplyTicketComponent, canActivate: [authGuard, roleGuard('customer')] },
   { path: 'tickets/:id', component: TicketDetailComponent, canActivate: [authGuard, roleGuard('admin', 'customer')] },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard, roleGuard('admin')] }
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard, roleGuard('admin')] },
+  { path: 'users', component: UsersComponent, canActivate: [authGuard, roleGuard('admin')] },
+  { path: 'users/:id', component: UserEditComponent, canActivate: [authGuard, roleGuard('admin')] }
 ];

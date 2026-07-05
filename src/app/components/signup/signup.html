@@ -12,6 +12,19 @@
         </div>
       }
       <div>
+        <label for="fullName" class="my-2 block text-sm font-medium text-gray-900">Full name</label>
+        <input
+          type="text"
+          name="fullName"
+          id="fullName"
+          [(ngModel)]="fullName"
+          placeholder="Pera Perić"
+          required
+          class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-900 placeholder-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        />
+      </div>
+
+      <div>
         <label for="email" class="my-2 block text-sm font-medium text-gray-900">Your email</label>
         <input
           type="email"
@@ -20,6 +33,18 @@
           [(ngModel)]="email"
           placeholder="name@company.com"
           required
+          class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-900 placeholder-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <label for="phone" class="my-2 block text-sm font-medium text-gray-900">Phone <span class="text-gray-400">(optional)</span></label>
+        <input
+          type="text"
+          name="phone"
+          id="phone"
+          [(ngModel)]="phone"
+          placeholder="0601234567"
           class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-900 placeholder-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none"
         />
       </div>

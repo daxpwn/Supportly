@@ -2,6 +2,7 @@ import { Component, afterNextRender, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { forkJoin } from 'rxjs';
 import {
   Category,
   Department,
@@ -24,6 +25,7 @@ export class ApplyTicketComponent {
   categoryId: number | null = null;
   priorityId: number | null = null;
   departmentId: number | null = null;
+  files: File[] = [];
 
   readonly categories = signal<Category[]>([]);
   readonly priorities = signal<Priority[]>([]);
@@ -70,11 +72,33 @@ export class ApplyTicketComponent {
         departmentId: this.departmentId,
       })
       .subscribe({
-        next: () => {
-          this.submitting.set(false);
-          // Backend vraća 201 (bez tela) — obavesti korisnika i vodi ga na njegove tikete.
-          this.toastr.success('Tiket je uspešno poslat.');
-          this.router.navigate(['/my-tickets']);
+        next: (res) => {
+          // Prilozi se kače na već kreiran tiket (treba nam njegov id).
+          if (this.files.length === 0) {
+            this.finishSuccess();
+            return;
+          }
+
+          if (!res?.id) {
+            // Tiket je kreiran, ali backend nije vratio id (npr. nije restartovan) — bez priloga.
+            this.submitting.set(false);
+            this.toastr.warning('Tiket je kreiran, ali prilozi nisu mogli da se zakače.');
+            this.router.navigate(['/my-tickets']);
+            return;
+          }
+
+          forkJoin(
+            this.files.map((f) => this.ticketsService.uploadAttachment(res.id, f)),
+          ).subscribe({
+            next: () => this.finishSuccess(),
+            error: (err) => {
+              // Tiket je kreiran, ali prilog nije prošao — ne gubimo tiket.
+              this.submitting.set(false);
+              this.toastr.warning('Tiket je kreiran, ali prilog nije otpremljen.');
+              this.router.navigate(['/my-tickets']);
+              console.error(err);
+            },
+          });
         },
         error: (err) => {
           this.submitting.set(false);
@@ -82,5 +106,16 @@ export class ApplyTicketComponent {
           console.error(err);
         },
       });
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.files = input.files ? Array.from(input.files) : [];
+  }
+
+  private finishSuccess(): void {
+    this.submitting.set(false);
+    this.toastr.success('Tiket je uspešno poslat.');
+    this.router.navigate(['/my-tickets']);
   }
 }

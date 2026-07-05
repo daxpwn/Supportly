@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../../services/login.service';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -10,24 +10,32 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './signup.html',
 })
 export class SignupComponent {
+  fullName = '';
   email = '';
+  phone = '';
   password = '';
   confirmPassword = '';
   error = signal('');
 
   private readonly loginService = inject(LoginService);
-  private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
 
   onSubmit() {
     this.error.set('');
 
     if (
+      this.fullName.trim() === '' ||
       this.email.trim() === '' ||
       this.password.trim() === '' ||
       this.confirmPassword.trim() === ''
     ) {
       this.error.set('All fields are required');
+      return;
+    }
+
+    if (this.fullName.trim().length < 3) {
+      this.error.set('Full name must be at least 3 characters long');
       return;
     }
 
@@ -37,8 +45,12 @@ export class SignupComponent {
       return;
     }
 
-    if (this.password.length < 6) {
-      this.error.set('Password must be at least 6 characters long');
+    // Ista pravila kao backend validator: min 8, veliko + malo slovo, cifra, specijalni znak.
+    const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+    if (!passwordPattern.test(this.password)) {
+      this.error.set(
+        'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a digit, and a special character.',
+      );
       return;
     }
 
@@ -48,11 +60,17 @@ export class SignupComponent {
     }
 
     this.loginService
-      .register({ email: this.email, password: this.password })
+      .register({
+        fullName: this.fullName,
+        email: this.email,
+        password: this.password,
+        phone: this.phone,
+      })
       .subscribe({
-        next: (res) => {
-          this.auth.setToken(res.token);
-          this.router.navigate(['/dashboard']);
+        next: () => {
+          // Backend ne vraća token — nalog je kreiran, korisnik se sad prijavljuje.
+          this.toastr.success('Nalog je kreiran. Prijavite se.');
+          this.router.navigate(['/login']);
         },
         error: (err) => {
           this.error.set('Registration failed. Please try again later.');

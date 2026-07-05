@@ -8,6 +8,7 @@ export interface Ticket {
   ticketNumber: string;
   subject: string;
   status: string;
+  isClosed: boolean;
   priority: string;
   createdAt: string;
 }
@@ -19,6 +20,7 @@ export interface TicketDetail extends Ticket {
   assignee: string;
   updatedAt: string;
   comments?: TicketComment[];
+  attachments?: Attachment[];
 }
 
 export interface TicketComment {
@@ -27,6 +29,14 @@ export interface TicketComment {
   body: string;
   isInternal: boolean;
   createdAt: string;
+  attachments?: Attachment[];
+}
+
+export interface Attachment {
+  id: number;
+  fileName: string;
+  filePath: string;
+  mimeType: string;
 }
 
 export interface Category {
@@ -121,8 +131,8 @@ export class TicketsService {
   addComment(
     ticketId: number,
     comment: { body: string; isInternal: boolean },
-  ): Observable<TicketComment> {
-    return this.http.post<TicketComment>(`${environment.apiUrl}/comment`, {
+  ): Observable<{ id: number }> {
+    return this.http.post<{ id: number }>(`${environment.apiUrl}/comment`, {
       ticketId,
       body: comment.body,
       isInternal: comment.isInternal,
@@ -174,6 +184,27 @@ export class TicketsService {
       `${environment.apiUrl}/tickets`,
       payload,
     );
+  }
+
+  uploadAttachment(
+    ticketId: number,
+    file: File,
+    commentId?: number,
+  ): Observable<void> {
+    const form = new FormData();
+    form.append('file', file);
+    if (commentId != null) {
+      form.append('commentId', String(commentId));
+    }
+    return this.http.post<void>(
+      `${environment.apiUrl}/tickets/${ticketId}/attachments`,
+      form,
+    );
+  }
+
+  attachmentUrl(filePath: string): string {
+    const base = environment.apiUrl.replace(/\/api\/?$/, '');
+    return `${base}${filePath}`;
   }
 }
 

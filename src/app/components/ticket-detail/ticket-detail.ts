@@ -1,7 +1,8 @@
-import { Component, afterNextRender, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { Status, TicketComment, TicketDetail, TicketsService } from '../../services/tickets.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -28,8 +29,10 @@ export class TicketDetailComponent {
   readonly error = signal('');
   readonly commentError = signal('');
 
-  // Izabrani status u dropdown-u (id trenutnog statusa tiketa).
   selectedStatusId: number | null = null;
+
+  commentFiles: File[] = [];
+  private readonly commentFileInput = viewChild<ElementRef<HTMLInputElement>>('commentFileInput');
 
   private readonly fb = inject(FormBuilder);
   private ticketId = 0;
@@ -62,10 +65,8 @@ export class TicketDetailComponent {
         this.syncSelectedStatus();
 
         if (data.comments) {
-          // Komentari stižu ugnježđeni u detalju tiketa (pravi backend).
           this.comments.set(data.comments);
         } else {
-          // Fallback za mock: zaseban poziv za komentare.
           this.ticketsService.getComments(this.ticketId).subscribe({
             next: (list) => this.comments.set(list),
             error: (err) => console.error(err),
@@ -76,16 +77,19 @@ export class TicketDetailComponent {
     });
   }
 
-  // Uskladi dropdown sa trenutnim statusom tiketa (detalj vraća ime statusa, ne id).
   private syncSelectedStatus() {
     const current = this.ticket()?.status;
     const match = this.statuses().find((s) => s.name === current);
     this.selectedStatusId = match ? match.id : null;
   }
 
+  attachmentUrl(filePath: string): string {
+    return this.ticketsService.attachmentUrl(filePath);
+  }
+
   onStatusChange(statusId: number) {
     const previous = this.selectedStatusId;
-    this.selectedStatusId = statusId; // optimistički
+    this.selectedStatusId = statusId;
 
     this.ticketsService.changeTicketStatus(this.ticketId, statusId).subscribe({
       next: () => {
@@ -94,11 +98,16 @@ export class TicketDetailComponent {
         this.toastr.success('Status je promenjen.');
       },
       error: (err) => {
-        this.selectedStatusId = previous; // vrati na staro
+        this.selectedStatusId = previous;
         this.toastr.error('Greška pri promeni statusa.');
         console.error(err);
       },
     });
+  }
+
+  onCommentFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.commentFiles = input.files ? Array.from(input.files) : [];
   }
 
   onSubmit() {
@@ -112,15 +121,38 @@ export class TicketDetailComponent {
     const { body, isInternal } = this.commentForm.getRawValue();
 
     this.ticketsService.addComment(this.ticketId, { body, isInternal }).subscribe({
-      next: () => {
-        this.commentForm.reset({ body: '', isInternal: false });
-        // Backend vraća 201 bez tela; ponovo učitavamo komentare sa servera.
-        this.loadTicket();
+      next: (res) => {
+        const files = this.commentFiles;
+        if (files.length === 0) {
+          this.afterComment();
+          return;
+        }
+
+        forkJoin(
+          files.map((f) =>
+            this.ticketsService.uploadAttachment(this.ticketId, f, res?.id),
+          ),
+        ).subscribe({
+          next: () => this.afterComment(),
+          error: (err) => {
+            this.toastr.warning('Komentar je dodat, ali prilog nije otpremljen.');
+            this.afterComment();
+            console.error(err);
+          },
+        });
       },
       error: (err) => {
         this.commentError.set('Error, try again later');
         console.error(err);
       },
     });
+  }
+
+  private afterComment(): void {
+    this.commentForm.reset({ body: '', isInternal: false });
+    this.commentFiles = [];
+    const input = this.commentFileInput();
+    if (input) input.nativeElement.value = '';
+    this.loadTicket();
   }
 }

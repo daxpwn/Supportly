@@ -9,8 +9,10 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
+  fullName: string;
   email: string;
   password: string;
+  phone: string;
 }
 
 export interface LoginResponse {
@@ -44,10 +46,8 @@ export class LoginService {
     );
   }
 
-  register(creds: RegisterRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(
-      `${environment.apiUrl}/auth/register`,
-      creds,
-    );
+  // Backend: POST /api/register — pravi customer nalog, vraća 201 bez tela (bez tokena).
+  register(creds: RegisterRequest): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/register`, creds);
   }
 }

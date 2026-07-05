@@ -1,46 +1,36 @@
 <div class="min-h-screen bg-gray-100 px-4 pt-28 pb-12">
   <div class="mx-auto max-w-5xl">
-    <!-- Zaglavlje -->
     <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p class="text-sm text-gray-500">Pregled najnovijih tiketa</p>
+        <p class="text-sm text-gray-500">Overview of the latest tickets</p>
       </div>
-      <a
-        routerLink="/tickets/new"
-        class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-      >
-        + Novi tiket
-      </a>
     </div>
 
-    <!-- Statističke kartice -->
     <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
       <div class="rounded-xl bg-white p-5 shadow">
-        <p class="text-sm text-gray-500">Aktivni</p>
+        <p class="text-sm text-gray-500">Active</p>
         <p class="mt-1 text-3xl font-bold text-gray-900">{{ activeCount() }}</p>
       </div>
       <div class="rounded-xl bg-white p-5 shadow">
-        <p class="text-sm text-gray-500">Rešeni</p>
+        <p class="text-sm text-gray-500">Resolved</p>
         <p class="mt-1 text-3xl font-bold text-gray-900">{{ resolvedCount() }}</p>
       </div>
       <div class="rounded-xl bg-white p-5 shadow">
-        <p class="text-sm text-gray-500">Kritični</p>
+        <p class="text-sm text-gray-500">Critical</p>
         <p class="mt-1 text-3xl font-bold text-red-600">{{ criticalCount() }}</p>
       </div>
     </div>
-
-    <!-- Najnoviji tiketi -->
     <div class="mb-4 flex items-center justify-between">
-      <h2 class="text-lg font-semibold text-gray-900">Najnoviji tiketi</h2>
+      <h2 class="text-lg font-semibold text-gray-900">Latest Tickets</h2>
       <a routerLink="/tickets" class="text-sm font-medium text-blue-600 hover:underline">
-        Svi tiketi →
+        All Tickets →
       </a>
     </div>
 
     @if (loading()) {
       <p class="rounded-xl bg-white p-8 text-center text-sm text-gray-500 shadow">
-        Učitavanje…
+        Loading...
       </p>
     } @else if (error()) {
       <p class="rounded-xl bg-red-50 p-8 text-center text-sm text-red-600 shadow">
@@ -48,7 +38,7 @@
       </p>
     } @else if (latestTickets().length === 0) {
       <p class="rounded-xl bg-white p-8 text-center text-sm text-gray-500 shadow">
-        Nema tiketa za prikaz.
+        No tickets to display.
       </p>
     } @else {
       <div class="space-y-3">

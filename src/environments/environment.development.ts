@@ -1,4 +1,4 @@
 export const environment = {
-  apiUrl: '/api',
-  ext: '.json',
+  apiUrl: 'http://localhost:5064/api',
+  ext: '',
 };

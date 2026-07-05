@@ -25,7 +25,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["node_modules/nprogress/nprogress.css", "src/styles.css"],
+            "styles": ["node_modules/nprogress/nprogress.css", "node_modules/ngx-toastr/toastr.css", "src/styles.css"],
             "allowedCommonJsDependencies": ["nprogress"],
             "server": "src/main.server.ts",
             "outputMode": "server",

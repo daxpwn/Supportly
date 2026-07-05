@@ -13,13 +13,20 @@
           <!-- Menu -->
           <ul class="nav" [style.display]="menuOpen() ? 'block' : null">
             @if (isLoggedIn()) {
-              <li class="scroll-to-section"><a routerLink="/dashboard">Dashboard</a></li>
-              <li class="scroll-to-section"><a routerLink="/profile">Profile</a></li>
-              <li class="scroll-to-section"><a href="#" (click)="logout($event)">Logout</a></li>
+              @if (role() === 'customer') {
+                <li class="scroll-to-section"><a routerLink="/tickets/new">Apply ticket</a></li>
+                <li class="scroll-to-section"><a routerLink="/my-tickets">My tickets</a></li>
+                <li class="scroll-to-section"><a href="#" (click)="logout($event)">Logout</a></li>
+              } @else {
+                <li class="scroll-to-section"><a routerLink="/dashboard">Dashboard</a></li>
+                <li class="scroll-to-section"><a routerLink="/profile">Profile</a></li>
+                <li class="scroll-to-section"><a href="#" (click)="logout($event)">Logout</a></li>
+                <li class="scroll-to-section"><a routerLink="/author">Author</a></li>
+              }
             } @else {
               <li class="scroll-to-section"><a routerLink="/login">Login</a></li>
+              <li class="scroll-to-section"><a routerLink="/author">Author</a></li>
             }
-            <li class="scroll-to-section"><a routerLink="/author">Author</a></li>
           </ul>
           <a class="menu-trigger" [class.active]="menuOpen()" (click)="toggleMenu()">
             <span>Menu</span>

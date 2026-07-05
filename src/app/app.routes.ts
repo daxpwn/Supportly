@@ -7,15 +7,20 @@ import { SignupComponent } from './components/signup/signup';
 import { DashboardComponent } from './components/dashboard/dashboard';
 import { Tickets } from './components/tickets/tickets';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail';
+import { ApplyTicketComponent } from './components/apply-ticket/apply-ticket';
+import { MyTicketsComponent } from './components/my-tickets/my-tickets';
 import { ProfileComponent } from './components/profile/profile';
+import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'author', component: AuthorComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-  { path: 'tickets', component: Tickets, canActivate: [authGuard] },
-  { path: 'tickets/:id', component: TicketDetailComponent, canActivate: [authGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard, roleGuard('admin')] },
+  { path: 'my-tickets', component: MyTicketsComponent, canActivate: [authGuard, roleGuard('customer')] },
+  { path: 'tickets', component: Tickets, canActivate: [authGuard, roleGuard('admin')] },
+  { path: 'tickets/new', component: ApplyTicketComponent, canActivate: [authGuard, roleGuard('customer')] },
+  { path: 'tickets/:id', component: TicketDetailComponent, canActivate: [authGuard, roleGuard('admin', 'customer')] },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard, roleGuard('admin')] }
 ];

@@ -18,6 +18,7 @@ export interface TicketDetail extends Ticket {
   requester: string;
   assignee: string;
   updatedAt: string;
+  comments?: TicketComment[];
 }
 
 export interface TicketComment {
@@ -28,15 +29,74 @@ export interface TicketComment {
   createdAt: string;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  parentId: number | null;
+}
+
+export interface Priority {
+  id: number;
+  name: string;
+}
+
+export interface Department {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export interface Status {
+  id: number;
+  name: string;
+  isClosed: boolean;
+}
+
+export interface CreateTicketRequest {
+  subject: string;
+  description: string;
+  categoryId: number;
+  priorityId: number;
+  departmentId: number | null;
+}
+
+export interface CreateTicketResponse {
+  id: number;
+  ticketNumber: string;
+}
+
+export interface PagedResponse<T> {
+  totalCount: number;
+  pagesCount: number;
+  items: T[];
+  currentPage: number;
+  perPage: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TicketsService {
   private readonly http = inject(HttpClient);
 
   getTickets(): Observable<Ticket[]> {
-    const url = environment.ext
-      ? `${environment.apiUrl}/tickets.list${environment.ext}` 
-      : `${environment.apiUrl}/tickets`;
-    return this.http.get<Ticket[]>(url);
+    if (environment.ext) {
+      return this.http.get<Ticket[]>(
+        `${environment.apiUrl}/tickets.list${environment.ext}`,
+      );
+    }
+    return this.http
+      .get<PagedResponse<Ticket>>(`${environment.apiUrl}/tickets`)
+      .pipe(map((res) => res.items));
+  }
+
+  getMyTickets(): Observable<Ticket[]> {
+    if (environment.ext) {
+      return this.http.get<Ticket[]>(
+        `${environment.apiUrl}/tickets.list${environment.ext}`,
+      );
+    }
+    return this.http
+      .get<PagedResponse<Ticket>>(`${environment.apiUrl}/tickets/my`)
+      .pipe(map((res) => res.items));
   }
 
   getTicket(id: number): Observable<TicketDetail> {
@@ -45,7 +105,10 @@ export class TicketsService {
         .get<TicketDetail[]>(`${environment.apiUrl}/tickets.detail${environment.ext}`)
         .pipe(map((list) => list.find((t) => t.id === id)!));
     }
-    return this.http.get<TicketDetail>(`${environment.apiUrl}/tickets/${id}`);
+    // Backend vraća niz sa jednim elementom, a komentari su ugnježđeni u njemu.
+    return this.http
+      .get<TicketDetail[]>(`${environment.apiUrl}/tickets/${id}`)
+      .pipe(map((list) => list[0]));
   }
 
   getComments(ticketId: number): Observable<TicketComment[]> {
@@ -59,9 +122,57 @@ export class TicketsService {
     ticketId: number,
     comment: { body: string; isInternal: boolean },
   ): Observable<TicketComment> {
-    return this.http.post<TicketComment>(
-      `${environment.apiUrl}/tickets/${ticketId}/comments`,
-      comment,
+    return this.http.post<TicketComment>(`${environment.apiUrl}/comment`, {
+      ticketId,
+      body: comment.body,
+      isInternal: comment.isInternal,
+    });
+  }
+
+  getCategories(): Observable<Category[]> {
+    const url = environment.ext
+      ? `${environment.apiUrl}/categories${environment.ext}`
+      : `${environment.apiUrl}/categories`;
+    return this.http.get<Category[]>(url);
+  }
+
+  getPriorities(): Observable<Priority[]> {
+    const url = environment.ext
+      ? `${environment.apiUrl}/priorities${environment.ext}`
+      : `${environment.apiUrl}/priorities`;
+    return this.http.get<Priority[]>(url);
+  }
+
+  getDepartments(): Observable<Department[]> {
+    const url = environment.ext
+      ? `${environment.apiUrl}/departments${environment.ext}`
+      : `${environment.apiUrl}/departments`;
+    return this.http.get<Department[]>(url);
+  }
+
+  getStatuses(): Observable<Status[]> {
+    const url = environment.ext
+      ? `${environment.apiUrl}/statuses${environment.ext}`
+      : `${environment.apiUrl}/statuses`;
+    return this.http.get<Status[]>(url);
+  }
+
+  changeTicketStatus(ticketId: number, statusId: number): Observable<void> {
+    return this.http.patch<void>(
+      `${environment.apiUrl}/tickets/${ticketId}/status`,
+      { statusId },
+    );
+  }
+
+  createTicket(payload: CreateTicketRequest): Observable<CreateTicketResponse> {
+    if (environment.ext) {
+      return this.http.get<CreateTicketResponse>(
+        `${environment.apiUrl}/tickets.create${environment.ext}`,
+      );
+    }
+    return this.http.post<CreateTicketResponse>(
+      `${environment.apiUrl}/tickets`,
+      payload,
     );
   }
 }

@@ -10,10 +10,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
-/**
- * Sticky header + glavna navigacija.
- * Sticky `background-header` na skrol; mobilni meni slide-toggle; login modal.
- */
 @Component({
   selector: 'app-header',
   imports: [RouterLink],
@@ -24,14 +20,14 @@ export class HeaderComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
-  /** Da li je korisnik ulogovan (signal iz AuthService). */
   readonly isLoggedIn = this.auth.isLoggedIn;
+
+  readonly role = this.auth.role;
 
   readonly scrolled = signal(false);
   readonly menuOpen = signal(false);
 
   constructor() {
-    // Postavi tačno sticky stanje kad DOM postoji (samo u browseru).
     afterNextRender(() => this.onScroll());
   }
 

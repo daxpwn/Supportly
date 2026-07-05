@@ -1,9 +1,5 @@
 import { Component, afterNextRender, signal } from '@angular/core';
 
-/**
- * Page loading animation. The original template added the `loaded` class on
- * `window.load`; here we flip a signal once the browser has rendered.
- */
 @Component({
   selector: 'app-preloader',
   template: `

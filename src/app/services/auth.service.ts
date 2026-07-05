@@ -1,4 +1,4 @@
-import { Injectable, inject, PLATFORM_ID, signal } from '@angular/core';
+import { Injectable, computed, inject, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
@@ -7,6 +7,11 @@ export class AuthService {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   readonly isLoggedIn = signal<boolean>(this.hasToken());
+
+  readonly role = computed<string | null>(() => {
+    this.isLoggedIn();
+    return (this.getProfile()?.['role'] as string | undefined) ?? null;
+  });
 
   private hasToken(): boolean {
     return this.isBrowser && !!localStorage.getItem('token');
@@ -26,7 +31,6 @@ export class AuthService {
     return this.isBrowser ? localStorage.getItem('token') : null;
   }
 
-  /** Dekodira payload (srednji deo) JWT tokena u objekat sa claim-ovima. */
   getProfile(): Record<string, unknown> | null {
     const token = this.getToken();
     if (!token) return null;

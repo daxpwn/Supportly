@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
-/** Newsletter sign-up + footer widgets. */
 @Component({
   selector: 'app-footer',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './footer.html',
 })
 export class FooterComponent {

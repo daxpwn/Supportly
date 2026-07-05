@@ -1,0 +1,65 @@
+<div class="flex min-h-screen items-center justify-center bg-gray-100 px-4 pt-28 pb-12">
+  <div class="w-full max-w-lg rounded-2xl bg-white p-8 shadow-xl sm:p-10">
+    <h1 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+      Sign in to your account
+    </h1>
+    <p class="mb-8 text-sm text-gray-500">Welcome back! Please enter your details.</p>
+
+    <form class="space-y-6" (ngSubmit)="onSubmit()">
+      @if(error()) {
+        <div class="mb-4 rounded-lg bg-red-100 p-4 text-sm text-red-700" role="alert">
+          {{ error() }}
+        </div>
+      }
+      <div>
+        <label for="email" class="my-2 block text-sm font-medium text-gray-900">Your email</label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          [(ngModel)]="email"
+          placeholder="name@company.com"
+          required
+          class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-900 placeholder-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <label for="password" class="my-2 block text-sm font-medium text-gray-900">Password</label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          [(ngModel)]="password"
+          placeholder="••••••••"
+          required
+          class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-900 placeholder-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        />
+      </div>
+
+      <div class="flex items-center justify-between my-2">
+        <label class="flex items-center gap-2 text-sm text-gray-600">
+          <input
+            type="checkbox"
+            id="remember"
+            class="h-4 w-4 rounded border-gray-300 accent-blue-600"
+          />
+          Remember me
+        </label>
+        <a href="#" class="text-sm font-medium text-blue-600 hover:underline">Forgot password?</a>
+      </div>
+
+      <button
+        type="submit"
+        class="my-2 w-full rounded-lg bg-blue-600 px-5 py-3 text-center text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+      >
+        Sign in
+      </button>
+
+      <p class="text-center text-sm text-gray-500">
+        Don’t have an account yet?
+        <a routerLink="/signup" class="font-medium text-blue-600 hover:underline">Sign up</a>
+      </p>
+    </form>
+  </div>
+</div>

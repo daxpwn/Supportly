@@ -1,0 +1,43 @@
+<div id="about" class="about-us section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 align-self-center">
+        <div class="section-heading">
+          <h4>About <em>What We Do</em> &amp; Who We Are</h4>
+          <img src="assets/images/heading-line-dec.png" alt="" />
+          <p>
+            Supportly is a modern help desk built for growing teams. We help
+            you turn scattered emails and chats into organized, trackable
+            tickets so every customer gets a fast, helpful reply.
+          </p>
+        </div>
+        <div class="row">
+          @for (box of boxes; track box.title) {
+            <div class="col-lg-6">
+              <div class="box-item">
+                <h4><a href="#services">{{ box.title }}</a></h4>
+                <p>{{ box.text }}</p>
+              </div>
+            </div>
+          }
+          <div class="col-lg-12">
+            <p>
+              Join thousands of support agents who trust Supportly to keep
+              their customers happy. Get started in minutes, no setup fees
+              and no complicated onboarding.
+            </p>
+            <div class="gradient-button">
+              <a routerLink="/signup">Start 14-Day Free Trial</a>
+            </div>
+            <span>*No Credit Card Required</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="right-image">
+          <img src="assets/images/about-right-dec.png" alt="" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

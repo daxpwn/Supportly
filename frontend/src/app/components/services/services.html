@@ -1,0 +1,33 @@
+<div id="services" class="services section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="section-heading">
+          <h4>Everything Your <em>Support Team</em> Needs</h4>
+          <img src="assets/images/heading-line-dec.png" alt="" />
+          <p>
+            Supportly gives you the tools to manage conversations, automate
+            busywork, and deliver fast, personal support at scale, all from
+            one easy-to-use platform.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      @for (item of items; track item.title) {
+        <div class="col-lg-3">
+          <div class="service-item {{ item.variant }}">
+            <div class="icon"></div>
+            <h4>{{ item.title }}</h4>
+            <p>{{ item.text }}</p>
+            <div class="text-button">
+              <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

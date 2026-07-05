@@ -1,0 +1,282 @@
+[
+  {
+    "id": 1,
+    "ticketNumber": "HD-2026-000123",
+    "subject": "Ne radi štampač",
+    "status": "Otvoren",
+    "priority": "Visok",
+    "createdAt": "2026-06-18T10:00:00"
+  },
+  {
+    "id": 2,
+    "ticketNumber": "HD-2026-000124",
+    "subject": "VPN se ne povezuje sa udaljene lokacije",
+    "status": "U obradi",
+    "priority": "Srednji",
+    "createdAt": "2026-06-17T09:12:00"
+  },
+  {
+    "id": 3,
+    "ticketNumber": "HD-2026-000125",
+    "subject": "Outlook ne sinhronizuje poštu",
+    "status": "Čeka korisnika",
+    "priority": "Nizak",
+    "createdAt": "2026-06-16T14:30:00"
+  },
+  {
+    "id": 4,
+    "ticketNumber": "HD-2026-000126",
+    "subject": "Zahtev za reset lozinke",
+    "status": "Rešen",
+    "priority": "Visok",
+    "createdAt": "2026-06-15T08:05:00"
+  },
+  {
+    "id": 5,
+    "ticketNumber": "HD-2026-000127",
+    "subject": "Plavi ekran pri pokretanju laptopa",
+    "status": "Otvoren",
+    "priority": "Kritičan",
+    "createdAt": "2026-06-19T07:45:00"
+  },
+  {
+    "id": 6,
+    "ticketNumber": "HD-2026-000128",
+    "subject": "Ne mogu da se prijavim na domen",
+    "status": "Otvoren",
+    "priority": "Visok",
+    "createdAt": "2026-06-19T11:20:00"
+  },
+  {
+    "id": 7,
+    "ticketNumber": "HD-2026-000129",
+    "subject": "Excel se zamrzava pri otvaranju velikih fajlova",
+    "status": "U obradi",
+    "priority": "Srednji",
+    "createdAt": "2026-06-19T13:05:00"
+  },
+  {
+    "id": 8,
+    "ticketNumber": "HD-2026-000130",
+    "subject": "Zahtev za instalaciju Adobe Acrobat-a",
+    "status": "Čeka korisnika",
+    "priority": "Nizak",
+    "createdAt": "2026-06-18T15:40:00"
+  },
+  {
+    "id": 9,
+    "ticketNumber": "HD-2026-000131",
+    "subject": "Server aplikacije ne odgovara",
+    "status": "Otvoren",
+    "priority": "Kritičan",
+    "createdAt": "2026-06-20T06:30:00"
+  },
+  {
+    "id": 10,
+    "ticketNumber": "HD-2026-000132",
+    "subject": "Miš i tastatura ne rade na novom računaru",
+    "status": "Rešen",
+    "priority": "Srednji",
+    "createdAt": "2026-06-14T09:50:00"
+  },
+  {
+    "id": 11,
+    "ticketNumber": "HD-2026-000133",
+    "subject": "Sporo učitavanje deljenog mrežnog diska",
+    "status": "U obradi",
+    "priority": "Srednji",
+    "createdAt": "2026-06-17T16:10:00"
+  },
+  {
+    "id": 12,
+    "ticketNumber": "HD-2026-000134",
+    "subject": "Zahtev za novu poslovnu email adresu",
+    "status": "Zatvoren",
+    "priority": "Nizak",
+    "createdAt": "2026-06-10T10:25:00"
+  },
+  {
+    "id": 13,
+    "ticketNumber": "HD-2026-000135",
+    "subject": "Teams se gasi tokom poziva",
+    "status": "Otvoren",
+    "priority": "Visok",
+    "createdAt": "2026-06-20T08:15:00"
+  },
+  {
+    "id": 14,
+    "ticketNumber": "HD-2026-000136",
+    "subject": "Antivirus prijavljuje pretnju na radnoj stanici",
+    "status": "U obradi",
+    "priority": "Kritičan",
+    "createdAt": "2026-06-20T09:40:00"
+  },
+  {
+    "id": 15,
+    "ticketNumber": "HD-2026-000137",
+    "subject": "Monitor treperi i gubi signal",
+    "status": "Čeka korisnika",
+    "priority": "Srednji",
+    "createdAt": "2026-06-16T11:00:00"
+  },
+  {
+    "id": 16,
+    "ticketNumber": "HD-2026-000138",
+    "subject": "Zahtev za pristup ERP modulu nabavke",
+    "status": "Otvoren",
+    "priority": "Nizak",
+    "createdAt": "2026-06-18T12:35:00"
+  },
+  {
+    "id": 17,
+    "ticketNumber": "HD-2026-000139",
+    "subject": "Skener ne prepoznaje dokumente",
+    "status": "Rešen",
+    "priority": "Nizak",
+    "createdAt": "2026-06-13T14:20:00"
+  },
+  {
+    "id": 18,
+    "ticketNumber": "HD-2026-000140",
+    "subject": "Wi-Fi stalno prekida vezu u sali za sastanke",
+    "status": "U obradi",
+    "priority": "Visok",
+    "createdAt": "2026-06-19T15:55:00"
+  },
+  {
+    "id": 19,
+    "ticketNumber": "HD-2026-000141",
+    "subject": "Greška 500 na internom portalu",
+    "status": "Otvoren",
+    "priority": "Kritičan",
+    "createdAt": "2026-06-21T07:05:00"
+  },
+  {
+    "id": 20,
+    "ticketNumber": "HD-2026-000142",
+    "subject": "Zahtev za zamenu baterije na laptopu",
+    "status": "Čeka korisnika",
+    "priority": "Nizak",
+    "createdAt": "2026-06-15T13:10:00"
+  },
+  {
+    "id": 21,
+    "ticketNumber": "HD-2026-000143",
+    "subject": "Ne mogu da pošaljem fakture preko sistema",
+    "status": "U obradi",
+    "priority": "Visok",
+    "createdAt": "2026-06-20T10:50:00"
+  },
+  {
+    "id": 22,
+    "ticketNumber": "HD-2026-000144",
+    "subject": "Dvofaktorska autentifikacija ne šalje kod",
+    "status": "Otvoren",
+    "priority": "Visok",
+    "createdAt": "2026-06-21T09:30:00"
+  },
+  {
+    "id": 23,
+    "ticketNumber": "HD-2026-000145",
+    "subject": "Zahtev za novi telefon i prenos broja",
+    "status": "Zatvoren",
+    "priority": "Nizak",
+    "createdAt": "2026-06-09T11:45:00"
+  },
+  {
+    "id": 24,
+    "ticketNumber": "HD-2026-000146",
+    "subject": "Baza podataka prijavljuje deadlock greške",
+    "status": "U obradi",
+    "priority": "Kritičan",
+    "createdAt": "2026-06-20T18:20:00"
+  },
+  {
+    "id": 25,
+    "ticketNumber": "HD-2026-000147",
+    "subject": "Pristup deljenom kalendaru ne radi",
+    "status": "Rešen",
+    "priority": "Srednji",
+    "createdAt": "2026-06-12T08:40:00"
+  },
+  {
+    "id": 26,
+    "ticketNumber": "HD-2026-000148",
+    "subject": "Računar se neočekivano restartuje",
+    "status": "Otvoren",
+    "priority": "Visok",
+    "createdAt": "2026-06-21T12:15:00"
+  },
+  {
+    "id": 27,
+    "ticketNumber": "HD-2026-000149",
+    "subject": "Zahtev za nadogradnju RAM memorije",
+    "status": "Čeka korisnika",
+    "priority": "Nizak",
+    "createdAt": "2026-06-17T10:05:00"
+  },
+  {
+    "id": 28,
+    "ticketNumber": "HD-2026-000150",
+    "subject": "SharePoint dokumenti se ne otvaraju",
+    "status": "U obradi",
+    "priority": "Srednji",
+    "createdAt": "2026-06-19T17:30:00"
+  },
+  {
+    "id": 29,
+    "ticketNumber": "HD-2026-000151",
+    "subject": "Phishing email prijavljen od strane korisnika",
+    "status": "Otvoren",
+    "priority": "Kritičan",
+    "createdAt": "2026-06-21T08:00:00"
+  },
+  {
+    "id": 30,
+    "ticketNumber": "HD-2026-000152",
+    "subject": "Zahtev za kreiranje grupe za distribuciju pošte",
+    "status": "Rešen",
+    "priority": "Nizak",
+    "createdAt": "2026-06-11T15:25:00"
+  },
+  {
+    "id": 31,
+    "ticketNumber": "HD-2026-000153",
+    "subject": "Aplikacija za evidenciju radnog vremena ne beleži prijave",
+    "status": "U obradi",
+    "priority": "Visok",
+    "createdAt": "2026-06-20T13:45:00"
+  },
+  {
+    "id": 32,
+    "ticketNumber": "HD-2026-000154",
+    "subject": "Zvuk ne radi na konferencijskom sistemu",
+    "status": "Čeka korisnika",
+    "priority": "Srednji",
+    "createdAt": "2026-06-18T09:20:00"
+  },
+  {
+    "id": 33,
+    "ticketNumber": "HD-2026-000155",
+    "subject": "Zahtev za deinstalaciju nepotrebnog softvera",
+    "status": "Zatvoren",
+    "priority": "Nizak",
+    "createdAt": "2026-06-08T14:10:00"
+  },
+  {
+    "id": 34,
+    "ticketNumber": "HD-2026-000156",
+    "subject": "Nedostaje licenca za Microsoft Office",
+    "status": "Otvoren",
+    "priority": "Srednji",
+    "createdAt": "2026-06-21T10:35:00"
+  },
+  {
+    "id": 35,
+    "ticketNumber": "HD-2026-000157",
+    "subject": "Disk je pun na fajl serveru",
+    "status": "U obradi",
+    "priority": "Kritičan",
+    "createdAt": "2026-06-21T06:50:00"
+  }
+]

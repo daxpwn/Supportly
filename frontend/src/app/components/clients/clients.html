@@ -1,0 +1,79 @@
+<div id="clients" class="the-clients">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="section-heading">
+          <h4>See What <em>Our Customers Say</em> About Supportly</h4>
+          <img src="assets/images/heading-line-dec.png" alt="" />
+          <p>
+            Support teams of every size rely on Supportly to deliver fast,
+            friendly help. Here is what some of them have to say.
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="naccs">
+          <div class="grid">
+            <div class="row">
+              <div class="col-lg-7 align-self-center">
+                <div class="menu">
+                  @for (item of testimonials; track item.name; let i = $index) {
+                    <div
+                      [class.active]="activeIndex() === i"
+                      (click)="select(i)"
+                    >
+                      <div class="thumb">
+                        <div class="row">
+                          <div class="col-lg-4 col-sm-4 col-12">
+                            <h4>{{ item.name }}</h4>
+                            <span class="date">{{ item.date }}</span>
+                          </div>
+                          <div class="col-lg-4 col-sm-4 d-none d-sm-block">
+                            <span class="category">{{ item.category }}</span>
+                          </div>
+                          <div class="col-lg-4 col-sm-4 col-12">
+                            @for (s of stars; track s) {
+                              <i class="fa fa-star"></i>
+                            }
+                            <span class="rating">{{ item.rating }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="col-lg-5">
+                <ul class="nacc">
+                  @for (item of testimonials; track item.name; let i = $index) {
+                    <li [class.active]="activeIndex() === i">
+                      <div>
+                        <div class="thumb">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="client-content">
+                                <img src="assets/images/quote.png" alt="" />
+                                <p>{{ item.quote }}</p>
+                              </div>
+                              <div class="down-content">
+                                <img src="assets/images/client-image.jpg" alt="" />
+                                <div class="right-content">
+                                  <h4>{{ item.author }}</h4>
+                                  <span>{{ item.role }}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,5 +15,12 @@ namespace Application.DTO.Search
 
         public DateTime? CreatedFrom { get; set; }
         public DateTime? CreatedTo { get; set; }
+
+        public bool? OnlyOpen { get; set; }         // true => samo tiketi čiji status nije zatvoren
+
+        // Sortiranje: SortBy ∈ { createdAt (default), priority, status, subject, ticketNumber }
+        // SortDir ∈ { desc (default), asc }
+        public string SortBy { get; set; }
+        public string SortDir { get; set; }
     }
 }

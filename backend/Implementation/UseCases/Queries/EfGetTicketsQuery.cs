@@ -3,6 +3,7 @@ using Application.DTO.Search;
 using Application.Queries;
 using Domain.Authorization;
 using Supportly.DataAccess;
+using System;
 using System.Linq;
 
 namespace Implementation.UseCases.Queries
@@ -52,10 +53,30 @@ namespace Implementation.UseCases.Queries
             if (search.CreatedTo.HasValue)
                 query = query.Where(t => t.CreatedAt <= search.CreatedTo.Value);
 
+            // Prikaži samo otvorene (status koji nije zatvoren)
+            if (search.OnlyOpen == true)
+                query = query.Where(t => !t.Status.IsClosed);
+
             int totalCount = query.Count();
 
-            var items = query
-                .OrderByDescending(t => t.CreatedAt)
+            bool desc = !string.Equals(search.SortDir, "asc", StringComparison.OrdinalIgnoreCase);
+
+            IOrderedQueryable<Domain.Ticket> ordered = (search.SortBy?.Trim().ToLowerInvariant()) switch
+            {
+                "priority"     => desc ? query.OrderByDescending(t => t.Priority.Level)
+                                       : query.OrderBy(t => t.Priority.Level),
+                "status"       => desc ? query.OrderByDescending(t => t.StatusId)
+                                       : query.OrderBy(t => t.StatusId),
+                "subject"      => desc ? query.OrderByDescending(t => t.Subject)
+                                       : query.OrderBy(t => t.Subject),
+                "ticketnumber" => desc ? query.OrderByDescending(t => t.TicketNumber)
+                                       : query.OrderBy(t => t.TicketNumber),
+                _              => desc ? query.OrderByDescending(t => t.CreatedAt)
+                                       : query.OrderBy(t => t.CreatedAt),
+            };
+
+            var items = ordered
+                .ThenByDescending(t => t.Id)   // stabilan tie-breaker
                 .Skip((page - 1) * perPage)
                 .Take(perPage)
                 .Select(t => new TicketListItemDTO

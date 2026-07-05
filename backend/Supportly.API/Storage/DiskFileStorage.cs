@@ -5,11 +5,11 @@ using System.IO;
 
 namespace Supportly.API.Storage
 {
-    // Skladištenje fajlova na disk: wwwroot/Temp. Ime na disku je GUID (bez path traversal-a),
+    // Skladištenje fajlova na disk: wwwroot/Uploads. Ime na disku je GUID (bez path traversal-a),
     // originalno ime se čuva u bazi (Attachment.FileName).
     public class DiskFileStorage : IFileStorage
     {
-        private const string SubFolder = "Temp";
+        private const string SubFolder = "Uploads";
         private readonly string _webRoot;
 
         public DiskFileStorage(IWebHostEnvironment env)

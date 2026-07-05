@@ -36,9 +36,9 @@ export class DashboardComponent {
 
   constructor() {
     afterNextRender(() => {
-      this.ticketsService.getTickets().subscribe({
-        next: (data) => {
-          this.tickets.set(data);
+      this.ticketsService.getTickets({ perPage: 100 }).subscribe({
+        next: (res) => {
+          this.tickets.set(res.items);
           this.loading.set(false);
         },
         error: (err) => {

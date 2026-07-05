@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -83,19 +83,106 @@ export interface PagedResponse<T> {
   perPage: number;
 }
 
+export type TicketSortBy =
+  | 'createdAt'
+  | 'priority'
+  | 'status'
+  | 'subject'
+  | 'ticketNumber';
+
+export interface TicketSearchParams {
+  keyword?: string;
+  page?: number;
+  perPage?: number;
+  statusId?: number;
+  priorityId?: number;
+  onlyOpen?: boolean;
+  sortBy?: TicketSortBy;
+  sortDir?: 'asc' | 'desc';
+}
+
 @Injectable({ providedIn: 'root' })
 export class TicketsService {
   private readonly http = inject(HttpClient);
 
-  getTickets(): Observable<Ticket[]> {
+  // Server-side pretraga + paginacija. Backend filtrira po Keyword (Subject/TicketNumber)
+  // i vraća PagedResponse (totalCount, pagesCount, items...). U mock (ext) režimu
+  // filtriramo/sečemo lokalno da bi ponašanje ostalo isto.
+  getTickets(params: TicketSearchParams = {}): Observable<PagedResponse<Ticket>> {
     if (environment.ext) {
-      return this.http.get<Ticket[]>(
-        `${environment.apiUrl}/tickets.list${environment.ext}`,
-      );
+      return this.http
+        .get<Ticket[]>(`${environment.apiUrl}/tickets.list${environment.ext}`)
+        .pipe(map((all) => this.paginateLocally(all, params)));
     }
-    return this.http
-      .get<PagedResponse<Ticket>>(`${environment.apiUrl}/tickets`)
-      .pipe(map((res) => res.items));
+    return this.http.get<PagedResponse<Ticket>>(`${environment.apiUrl}/tickets`, {
+      params: this.toHttpParams(params),
+    });
+  }
+
+  private toHttpParams(params: TicketSearchParams): HttpParams {
+    let httpParams = new HttpParams();
+    if (params.keyword) httpParams = httpParams.set('keyword', params.keyword);
+    if (params.page) httpParams = httpParams.set('page', params.page);
+    if (params.perPage) httpParams = httpParams.set('perPage', params.perPage);
+    if (params.statusId != null)
+      httpParams = httpParams.set('statusId', params.statusId);
+    if (params.priorityId != null)
+      httpParams = httpParams.set('priorityId', params.priorityId);
+    if (params.onlyOpen) httpParams = httpParams.set('onlyOpen', true);
+    if (params.sortBy) httpParams = httpParams.set('sortBy', params.sortBy);
+    if (params.sortDir) httpParams = httpParams.set('sortDir', params.sortDir);
+    return httpParams;
+  }
+
+  private paginateLocally(
+    all: Ticket[],
+    params: TicketSearchParams,
+  ): PagedResponse<Ticket> {
+    const q = (params.keyword ?? '').toLowerCase().trim();
+    let filtered = q
+      ? all.filter(
+          (t) =>
+            t.subject.toLowerCase().includes(q) ||
+            t.ticketNumber.toLowerCase().includes(q),
+        )
+      : all;
+
+    if (params.onlyOpen) {
+      filtered = filtered.filter((t) => !t.isClosed);
+    }
+
+    const dir = params.sortDir === 'asc' ? 1 : -1;
+    filtered = [...filtered].sort((a, b) => {
+      let cmp: number;
+      switch (params.sortBy) {
+        case 'subject':
+          cmp = a.subject.localeCompare(b.subject);
+          break;
+        case 'ticketNumber':
+          cmp = a.ticketNumber.localeCompare(b.ticketNumber);
+          break;
+        case 'status':
+          cmp = a.status.localeCompare(b.status);
+          break;
+        case 'priority':
+          cmp = a.priority.localeCompare(b.priority);
+          break;
+        default:
+          cmp = a.createdAt.localeCompare(b.createdAt);
+      }
+      return cmp * dir;
+    });
+
+    const perPage = params.perPage ?? 10;
+    const page = params.page ?? 1;
+    const start = (page - 1) * perPage;
+    return {
+      totalCount: filtered.length,
+      pagesCount: Math.max(1, Math.ceil(filtered.length / perPage)),
+      items: filtered.slice(start, start + perPage),
+      currentPage: page,
+      perPage,
+    };
   }
 
   getMyTickets(): Observable<Ticket[]> {

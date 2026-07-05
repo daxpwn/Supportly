@@ -4,7 +4,7 @@ namespace Application.DTO
     {
         public long Id { get; set; }
         public string FileName { get; set; }
-        public string FilePath { get; set; }   // relativna putanja/URL (/Temp/...)
+        public string FilePath { get; set; }   // relativna putanja/URL (/Uploads/...)
         public string MimeType { get; set; }
     }
 }

@@ -130,7 +130,7 @@ if (app.Environment.IsLocal())
 
 
 
-app.UseStaticFiles();   // servira wwwroot (npr. /Temp/{fajl})
+app.UseStaticFiles();   // servira wwwroot (npr. /Uploads/{fajl})
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseCors("AngularDev");
 app.UseMiddleware<ApiKeyAuthorizationMiddleware>();

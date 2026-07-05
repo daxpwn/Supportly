@@ -1,6 +1,10 @@
-import { Component, afterNextRender, inject, signal, computed, effect } from '@angular/core';
+import { Component, afterNextRender, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Ticket, TicketsService } from '../../services/tickets.service';
+import {
+  Ticket,
+  TicketsService,
+  TicketSortBy,
+} from '../../services/tickets.service';
 
 @Component({
   selector: 'app-tickets',
@@ -15,97 +19,91 @@ export class Tickets {
   readonly error = signal('');
   readonly pageSize = 10;
   readonly currentPage = signal(1);
+  readonly totalPages = signal(1);
+  readonly totalCount = signal(0);
 
   searchTerm = signal('');
 
   sortPriority = signal<'none' | 'high' | 'low'>('none');
-
   sortStatus = signal<'none' | 'open' | 'closed'>('none');
+  onlyOpen = signal(false);
 
-  private readonly priorityRank: Record<string, number> = {
-    'Kritičan': 4,
-    'Visok': 3,
-    'Srednji': 2,
-    'Nizak': 1,
-  };
+  private searchDebounce?: ReturnType<typeof setTimeout>;
 
-  private readonly statusRank: Record<string, number> = {
-    'Otvoren': 1,
-    'U obradi': 2,
-    'Čeka korisnika': 3,
-    'Rešen': 4,
-    'Zatvoren': 5,
-  };
+  onSearch(value: string) {
+    this.searchTerm.set(value);
+    clearTimeout(this.searchDebounce);
+    this.searchDebounce = setTimeout(() => {
+      this.currentPage.set(1);
+      this.load();
+    }, 300);
+  }
 
-  readonly filteredTickets = computed(() => {
-    const q = this.searchTerm().toLowerCase().trim();
-    const list = this.tickets();
+  onSortPriority(value: 'none' | 'high' | 'low') {
+    this.sortPriority.set(value);
+    if (value !== 'none') this.sortStatus.set('none');
+    this.currentPage.set(1);
+    this.load();
+  }
 
-    if (!q) {
-      return list;
-    }
+  onSortStatus(value: 'none' | 'open' | 'closed') {
+    this.sortStatus.set(value);
+    if (value !== 'none') this.sortPriority.set('none');
+    this.currentPage.set(1);
+    this.load();
+  }
 
-    return list.filter((ticket) =>
-      ticket.subject.toLowerCase().includes(q) ||
-      ticket.ticketNumber.toLowerCase().includes(q) ||
-      ticket.status.toLowerCase().includes(q),
-    );
-  });
-
-  readonly sortedTickets = computed(() => {
-    const p = this.sortPriority();
-    const s = this.sortStatus();
-    return [...this.filteredTickets()].sort((a, b) => {
-
-      if (p !== 'none') {
-        const diff =
-          (this.priorityRank[b.priority] ?? 0) - (this.priorityRank[a.priority] ?? 0);
-        const d = p === 'high' ? diff : -diff;
-        if (d !== 0) return d;
-      }
-
-      if (s !== 'none') {
-        const diff = (this.statusRank[a.status] ?? 0) - (this.statusRank[b.status] ?? 0);
-        const d = s === 'open' ? diff : -diff;
-        if (d !== 0) return d;
-      }
-      return 0;
-    });
-  });
-
-  readonly paginatedTickets = computed(() => {
-    const all = this.sortedTickets();
-    const start = (this.currentPage() - 1) * this.pageSize;
-    return all.slice(start, start + this.pageSize);
-  });
-
-  readonly totalPages = computed(() =>
-    Math.ceil(this.sortedTickets().length / this.pageSize),
-  );
+  onOnlyOpen(checked: boolean) {
+    this.onlyOpen.set(checked);
+    this.currentPage.set(1);
+    this.load();
+  }
 
   nextPage() {
     if (this.currentPage() < this.totalPages()) {
       this.currentPage.update((p) => p + 1);
+      this.load();
     }
   }
 
   prevPage() {
     if (this.currentPage() > 1) {
       this.currentPage.update((p) => p - 1);
+      this.load();
     }
   }
 
-  constructor() {
-    effect(() => {
-      this.searchTerm();
-      this.sortPriority();
-      this.sortStatus();
-      this.currentPage.set(1);
-    });
-    afterNextRender(() => {
-      this.ticketsService.getTickets().subscribe({
-        next: (data) => {
-          this.tickets.set(data);
+  private resolveSort(): { sortBy?: TicketSortBy; sortDir?: 'asc' | 'desc' } {
+    if (this.sortPriority() !== 'none') {
+      return {
+        sortBy: 'priority',
+        sortDir: this.sortPriority() === 'high' ? 'desc' : 'asc',
+      };
+    }
+    if (this.sortStatus() !== 'none') {
+      return {
+        sortBy: 'status',
+        sortDir: this.sortStatus() === 'open' ? 'asc' : 'desc',
+      };
+    }
+    return {};
+  }
+
+  private load() {
+    this.loading.set(true);
+    this.ticketsService
+      .getTickets({
+        keyword: this.searchTerm().trim() || undefined,
+        page: this.currentPage(),
+        perPage: this.pageSize,
+        onlyOpen: this.onlyOpen() || undefined,
+        ...this.resolveSort(),
+      })
+      .subscribe({
+        next: (res) => {
+          this.tickets.set(res.items);
+          this.totalCount.set(res.totalCount);
+          this.totalPages.set(Math.max(1, res.pagesCount));
           this.loading.set(false);
         },
         error: (err) => {
@@ -114,6 +112,11 @@ export class Tickets {
           console.error(err);
         },
       });
+  }
+
+  constructor() {
+    afterNextRender(() => {
+      this.load();
     });
   }
 }

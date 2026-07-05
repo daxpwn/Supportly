@@ -35,8 +35,8 @@ artifacts/
 *.dotsettings.user
 
 # Uploaded attachment files (keep folder, ignore contents)
-Supportly.API/wwwroot/Temp/*
-!Supportly.API/wwwroot/Temp/.gitkeep
+Supportly.API/wwwroot/Uploads/*
+!Supportly.API/wwwroot/Uploads/.gitkeep
 
 # OS
 Thumbs.db

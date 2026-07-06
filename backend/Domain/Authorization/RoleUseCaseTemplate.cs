@@ -25,7 +25,8 @@ namespace Domain.Authorization
                         UseCaseIds.UploadAttachment,
                         UseCaseIds.GetUsers, UseCaseIds.GetOneUser, UseCaseIds.UpdateUser, UseCaseIds.DeleteUser,
                         UseCaseIds.GetCategories, UseCaseIds.GetDepartments,
-                        UseCaseIds.GetPriorities, UseCaseIds.GetStatuses
+                        UseCaseIds.GetPriorities, UseCaseIds.GetStatuses,
+                        UseCaseIds.GetUseCaseLogs, UseCaseIds.ManageRoles
                     };
                 case "agent":
                     return new[]

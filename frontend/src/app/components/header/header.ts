@@ -9,6 +9,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +19,7 @@ import { AuthService } from '../../services/auth.service';
 export class HeaderComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly auth = inject(AuthService);
+  private readonly loginService = inject(LoginService);
   private readonly router = inject(Router);
 
   readonly isLoggedIn = this.auth.isLoggedIn;
@@ -44,6 +46,16 @@ export class HeaderComponent {
   logout(event: Event): void {
     event.preventDefault();
     this.menuOpen.set(false);
+
+    // Prvo obavesti backend (dok token još postoji), pa lokalno očisti sesiju
+    // bez obzira na ishod (best-effort server-side invalidacija).
+    this.loginService.logout().subscribe({
+      next: () => this.finishLogout(),
+      error: () => this.finishLogout(),
+    });
+  }
+
+  private finishLogout(): void {
     this.auth.logout();
     this.router.navigate(['/login']);
   }

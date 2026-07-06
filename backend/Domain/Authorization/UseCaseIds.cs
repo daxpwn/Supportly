@@ -30,5 +30,7 @@ namespace Domain.Authorization
         public const string GetPriorities = "get-priorities";
         public const string GetStatuses = "get-statuses";
         public const string InsertTicket = "insert-ticket";
+        public const string GetUseCaseLogs = "get-audit-log";
+        public const string ManageRoles = "manage-roles";
     }
 }

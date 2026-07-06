@@ -1,0 +1,77 @@
+<div class="min-h-screen bg-gray-100 px-4 pt-28 pb-12">
+  <div class="mx-auto max-w-4xl">
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-gray-900">Roles &amp; permissions</h1>
+      <p class="text-sm text-gray-500">Dozvole (use case-ovi) po roli</p>
+    </div>
+
+    @if (loading()) {
+      <p class="rounded-xl bg-white p-8 text-center text-sm text-gray-500 shadow">
+        Loading...
+      </p>
+    } @else if (error()) {
+      <p class="rounded-xl bg-red-50 p-8 text-center text-sm text-red-600 shadow">
+        {{ error() }}
+      </p>
+    } @else {
+      <div class="space-y-4">
+        @for (role of roles(); track role.id) {
+          <div class="rounded-xl bg-white p-5 shadow">
+            <div class="mb-3 flex items-baseline justify-between">
+              <h2 class="text-lg font-semibold text-gray-900 capitalize">{{ role.name }}</h2>
+              <span class="text-xs text-gray-400">{{ role.useCaseIds.length }} dozvola</span>
+            </div>
+            @if (role.description) {
+              <p class="mb-3 text-sm text-gray-500">{{ role.description }}</p>
+            }
+
+            <!-- Postojeće dozvole (chips sa X) -->
+            @if (role.useCaseIds.length === 0) {
+              <p class="mb-3 text-sm text-gray-400">Nema dodeljenih dozvola.</p>
+            } @else {
+              <div class="mb-4 flex flex-wrap gap-2">
+                @for (uc of role.useCaseIds; track uc) {
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 py-1 pl-3 pr-1.5 text-xs font-medium text-blue-700">
+                    {{ uc }}
+                    <button
+                      type="button"
+                      (click)="remove(role, uc)"
+                      title="Ukloni"
+                      class="flex h-4 w-4 items-center justify-center rounded-full text-blue-500 hover:bg-blue-200 hover:text-blue-800">
+                      &times;
+                    </button>
+                  </span>
+                }
+              </div>
+            }
+
+            <!-- Dodavanje nove dozvole -->
+            <div class="flex items-center gap-2 border-t border-gray-100 pt-3">
+              <select
+                [value]="selected()[role.id] ?? ''"
+                (change)="onSelect(role.id, $any($event.target).value)"
+                class="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+                <option value="">— izaberi use case —</option>
+                @for (uc of availableFor(role); track uc) {
+                  <option [value]="uc">{{ uc }}</option>
+                }
+              </select>
+              <button
+                type="button"
+                (click)="add(role)"
+                [disabled]="!selected()[role.id]"
+                class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-40">
+                Dodaj
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <p class="mt-6 rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
+        Napomena: izmene dozvola se primenjuju pri sledećem loginu korisnika (dozvole se
+        peku u JWT). Postojeće sesije zadržavaju stare dozvole do isteka/re-logina.
+      </p>
+    }
+  </div>
+</div>

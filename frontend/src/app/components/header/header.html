@@ -21,6 +21,8 @@
                 <li class="scroll-to-section"><a routerLink="/dashboard">Dashboard</a></li>
                 @if (role() === 'admin') {
                   <li class="scroll-to-section"><a routerLink="/users">Users</a></li>
+                  <li class="scroll-to-section"><a routerLink="/roles">Roles</a></li>
+                  <li class="scroll-to-section"><a routerLink="/audit-log">Audit log</a></li>
                 }
                 <li class="scroll-to-section"><a routerLink="/profile">Profile</a></li>
                 <li class="scroll-to-section"><a href="#" (click)="logout($event)">Logout</a></li>

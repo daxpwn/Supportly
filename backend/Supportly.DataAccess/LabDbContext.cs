@@ -49,5 +49,8 @@ namespace Supportly.DataAccess
         public DbSet<TicketTag> TicketTags { get; set; }
         public DbSet<TicketHistory> TicketHistory { get; set; }
         public DbSet<CannedResponse> CannedResponses { get; set; }
+
+        // Audit log (svaki pokušaj izvršavanja use case-a)
+        public DbSet<UseCaseLog> UseCaseLogs { get; set; }
     }
 }

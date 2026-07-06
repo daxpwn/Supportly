@@ -43,6 +43,11 @@ namespace Supportly.API
             services.AddTransient<IGetDepartmentsQuery, EfGetDepartmentsQuery>();
             services.AddTransient<IGetPrioritiesQuery, EfGetPrioritiesQuery>();
             services.AddTransient<IGetStatusesQuery, EfGetStatusesQuery>();
+            services.AddTransient<IGetUseCaseLogsQuery, EfGetUseCaseLogsQuery>();
+            services.AddTransient<IGetRolesQuery, EfGetRolesQuery>();
+            services.AddTransient<IGetUseCaseCatalogQuery, EfGetUseCaseCatalogQuery>();
+            services.AddTransient<IAddRoleUseCaseCommand, EfAddRoleUseCaseCommand>();
+            services.AddTransient<IRemoveRoleUseCaseCommand, EfRemoveRoleUseCaseCommand>();
             services.AddTransient<ITicketInsertCommand, EfTicketInsertCommand>();
             services.AddTransient<ITicketInsertCommentCommand, EfInsertTicketComment>();
             services.AddTransient<IChangeTicketStatusCommand, EfChangeTicketStatus>();

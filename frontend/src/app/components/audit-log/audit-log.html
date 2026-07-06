@@ -1,0 +1,133 @@
+<div class="min-h-screen bg-gray-100 px-4 pt-28 pb-12">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-gray-900">Audit log</h1>
+      <p class="text-sm text-gray-500">Svaki pokušaj izvršavanja slučaja korišćenja</p>
+    </div>
+
+    <!-- Filteri -->
+    <div class="mb-4 flex flex-wrap items-end gap-3 rounded-xl bg-white p-4 shadow">
+      <label class="flex flex-col gap-1 text-xs font-medium text-gray-600">
+        Korisnik
+        <input
+          [value]="username()"
+          (input)="onUsername($any($event.target).value)"
+          placeholder="Ime korisnika"
+          class="w-48 rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+      </label>
+
+      <label class="flex flex-col gap-1 text-xs font-medium text-gray-600">
+        Slučaj korišćenja
+        <input
+          [value]="useCaseName()"
+          (input)="onUseCaseName($any($event.target).value)"
+          placeholder="Naziv akcije"
+          class="w-56 rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+      </label>
+
+      <label class="flex flex-col gap-1 text-xs font-medium text-gray-600">
+        Od
+        <input
+          type="date"
+          [value]="from()"
+          (change)="onFrom($any($event.target).value)"
+          class="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+      </label>
+
+      <label class="flex flex-col gap-1 text-xs font-medium text-gray-600">
+        Do
+        <input
+          type="date"
+          [value]="to()"
+          (change)="onTo($any($event.target).value)"
+          class="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+      </label>
+
+      <button
+        type="button"
+        (click)="resetFilters()"
+        class="ml-auto rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50">
+        Reset
+      </button>
+    </div>
+
+    @if (loading()) {
+      <p class="rounded-xl bg-white p-8 text-center text-sm text-gray-500 shadow">
+        Loading...
+      </p>
+    } @else if (error()) {
+      <p class="rounded-xl bg-red-50 p-8 text-center text-sm text-red-600 shadow">
+        {{ error() }}
+      </p>
+    } @else if (logs().length === 0) {
+      <p class="rounded-xl bg-white p-8 text-center text-sm text-gray-500 shadow">
+        Nema zapisa.
+      </p>
+    } @else {
+      <div class="overflow-x-auto rounded-xl bg-white shadow">
+        <table class="w-full text-left text-sm">
+          <thead class="border-b border-gray-200 text-xs uppercase tracking-wide text-gray-500">
+            <tr>
+              <th class="px-4 py-3">Korisnik</th>
+              <th class="px-4 py-3">Slučaj korišćenja</th>
+              <th class="px-4 py-3">Vrednosti</th>
+              <th class="px-4 py-3">Vreme</th>
+              <th class="px-4 py-3 text-right">Trajanje</th>
+              <th class="px-4 py-3">Ishod</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (log of logs(); track log.id) {
+              <tr class="border-b border-gray-100 last:border-0 hover:bg-gray-50">
+                <td class="px-4 py-3 font-medium text-gray-900">
+                  {{ log.username }}
+                  @if (log.userId != null) {
+                    <span class="text-xs text-gray-400">#{{ log.userId }}</span>
+                  }
+                </td>
+                <td class="px-4 py-3 text-gray-700">
+                  {{ log.useCaseName }}
+                  <span class="block text-xs text-gray-400">{{ log.useCaseId }}</span>
+                </td>
+                <td class="px-4 py-3">
+                  @if (log.payload) {
+                    <code class="block max-w-xs truncate rounded bg-gray-100 px-2 py-1 text-xs text-gray-700" [title]="log.payload">{{ log.payload }}</code>
+                  } @else {
+                    <span class="text-gray-300">—</span>
+                  }
+                </td>
+                <td class="px-4 py-3 text-gray-500">
+                  {{ log.executedAt | date: 'dd.MM.yyyy. HH:mm:ss' }}
+                </td>
+                <td class="px-4 py-3 text-right text-gray-700">{{ log.durationMs }} ms</td>
+                <td class="px-4 py-3">
+                  @if (log.succeeded) {
+                    <span class="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">OK</span>
+                  } @else {
+                    <span class="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700">Pao</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-4 flex items-center justify-between text-sm text-gray-600">
+        <button
+          (click)="prevPage()"
+          [disabled]="currentPage() === 1 || loading()"
+          class="rounded-lg border border-gray-300 px-3 py-1.5 disabled:opacity-40">
+          Previous
+        </button>
+        <span>Strana {{ currentPage() }} / {{ totalPages() }} ({{ totalCount() }})</span>
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage() >= totalPages() || loading()"
+          class="rounded-lg border border-gray-300 px-3 py-1.5 disabled:opacity-40">
+          Next
+        </button>
+      </div>
+    }
+  </div>
+</div>

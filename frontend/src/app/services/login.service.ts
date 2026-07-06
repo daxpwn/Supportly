@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface LoginRequest {
@@ -49,5 +49,12 @@ export class LoginService {
   // Backend: POST /api/register — pravi customer nalog, vraća 201 bez tela (bez tokena).
   register(creds: RegisterRequest): Observable<void> {
     return this.http.post<void>(`${environment.apiUrl}/register`, creds);
+  }
+
+  // Backend: POST /api/auth/logout — invalidira JWT + refresh token na serveru
+  // (TokenId se čita iz Bearer headera koji interceptor sam dodaje).
+  logout(): Observable<void> {
+    if (environment.ext) return of(void 0);
+    return this.http.post<void>(`${environment.apiUrl}/auth/logout`, {});
   }
 }

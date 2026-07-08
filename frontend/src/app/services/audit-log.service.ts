@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { PagedResponse } from '../interfaces/paged-response';
 
 export interface UseCaseLog {
   id: number;
@@ -19,18 +20,10 @@ export interface AuditLogSearchParams {
   userId?: number;
   username?: string;
   useCaseName?: string;
-  from?: string; // ISO datetime
-  to?: string; // ISO datetime
+  from?: string;
+  to?: string;
   page?: number;
   perPage?: number;
-}
-
-export interface PagedResponse<T> {
-  totalCount: number;
-  pagesCount: number;
-  items: T[];
-  currentPage: number;
-  perPage: number;
 }
 
 @Injectable({ providedIn: 'root' })

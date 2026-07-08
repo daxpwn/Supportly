@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { PagedResponse } from '../interfaces/paged-response';
 
 export interface Ticket {
   id: number;
@@ -75,14 +76,6 @@ export interface CreateTicketResponse {
   ticketNumber: string;
 }
 
-export interface PagedResponse<T> {
-  totalCount: number;
-  pagesCount: number;
-  items: T[];
-  currentPage: number;
-  perPage: number;
-}
-
 export type TicketSortBy =
   | 'createdAt'
   | 'priority'
@@ -105,15 +98,8 @@ export interface TicketSearchParams {
 export class TicketsService {
   private readonly http = inject(HttpClient);
 
-  // Server-side pretraga + paginacija. Backend filtrira po Keyword (Subject/TicketNumber)
-  // i vraća PagedResponse (totalCount, pagesCount, items...). U mock (ext) režimu
-  // filtriramo/sečemo lokalno da bi ponašanje ostalo isto.
+  // SERVER SIDE PRETRAGA I PAGINACIJA
   getTickets(params: TicketSearchParams = {}): Observable<PagedResponse<Ticket>> {
-    if (environment.ext) {
-      return this.http
-        .get<Ticket[]>(`${environment.apiUrl}/tickets.list${environment.ext}`)
-        .pipe(map((all) => this.paginateLocally(all, params)));
-    }
     return this.http.get<PagedResponse<Ticket>>(`${environment.apiUrl}/tickets`, {
       params: this.toHttpParams(params),
     });
@@ -134,85 +120,22 @@ export class TicketsService {
     return httpParams;
   }
 
-  private paginateLocally(
-    all: Ticket[],
-    params: TicketSearchParams,
-  ): PagedResponse<Ticket> {
-    const q = (params.keyword ?? '').toLowerCase().trim();
-    let filtered = q
-      ? all.filter(
-          (t) =>
-            t.subject.toLowerCase().includes(q) ||
-            t.ticketNumber.toLowerCase().includes(q),
-        )
-      : all;
-
-    if (params.onlyOpen) {
-      filtered = filtered.filter((t) => !t.isClosed);
-    }
-
-    const dir = params.sortDir === 'asc' ? 1 : -1;
-    filtered = [...filtered].sort((a, b) => {
-      let cmp: number;
-      switch (params.sortBy) {
-        case 'subject':
-          cmp = a.subject.localeCompare(b.subject);
-          break;
-        case 'ticketNumber':
-          cmp = a.ticketNumber.localeCompare(b.ticketNumber);
-          break;
-        case 'status':
-          cmp = a.status.localeCompare(b.status);
-          break;
-        case 'priority':
-          cmp = a.priority.localeCompare(b.priority);
-          break;
-        default:
-          cmp = a.createdAt.localeCompare(b.createdAt);
-      }
-      return cmp * dir;
-    });
-
-    const perPage = params.perPage ?? 10;
-    const page = params.page ?? 1;
-    const start = (page - 1) * perPage;
-    return {
-      totalCount: filtered.length,
-      pagesCount: Math.max(1, Math.ceil(filtered.length / perPage)),
-      items: filtered.slice(start, start + perPage),
-      currentPage: page,
-      perPage,
-    };
-  }
-
   getMyTickets(): Observable<Ticket[]> {
-    if (environment.ext) {
-      return this.http.get<Ticket[]>(
-        `${environment.apiUrl}/tickets.list${environment.ext}`,
-      );
-    }
     return this.http
       .get<PagedResponse<Ticket>>(`${environment.apiUrl}/tickets/my`)
       .pipe(map((res) => res.items));
   }
 
   getTicket(id: number): Observable<TicketDetail> {
-    if (environment.ext) {
-      return this.http
-        .get<TicketDetail[]>(`${environment.apiUrl}/tickets.detail${environment.ext}`)
-        .pipe(map((list) => list.find((t) => t.id === id)!));
-    }
-    // Backend vraća niz sa jednim elementom, a komentari su ugnježđeni u njemu.
     return this.http
       .get<TicketDetail[]>(`${environment.apiUrl}/tickets/${id}`)
       .pipe(map((list) => list[0]));
   }
 
   getComments(ticketId: number): Observable<TicketComment[]> {
-    const url = environment.ext
-      ? `${environment.apiUrl}/tickets.comments${environment.ext}`
-      : `${environment.apiUrl}/tickets/${ticketId}/comments`;
-    return this.http.get<TicketComment[]>(url);
+    return this.http.get<TicketComment[]>(
+      `${environment.apiUrl}/tickets/${ticketId}/comments`,
+    );
   }
 
   addComment(
@@ -227,31 +150,19 @@ export class TicketsService {
   }
 
   getCategories(): Observable<Category[]> {
-    const url = environment.ext
-      ? `${environment.apiUrl}/categories${environment.ext}`
-      : `${environment.apiUrl}/categories`;
-    return this.http.get<Category[]>(url);
+    return this.http.get<Category[]>(`${environment.apiUrl}/categories`);
   }
 
   getPriorities(): Observable<Priority[]> {
-    const url = environment.ext
-      ? `${environment.apiUrl}/priorities${environment.ext}`
-      : `${environment.apiUrl}/priorities`;
-    return this.http.get<Priority[]>(url);
+    return this.http.get<Priority[]>(`${environment.apiUrl}/priorities`);
   }
 
   getDepartments(): Observable<Department[]> {
-    const url = environment.ext
-      ? `${environment.apiUrl}/departments${environment.ext}`
-      : `${environment.apiUrl}/departments`;
-    return this.http.get<Department[]>(url);
+    return this.http.get<Department[]>(`${environment.apiUrl}/departments`);
   }
 
   getStatuses(): Observable<Status[]> {
-    const url = environment.ext
-      ? `${environment.apiUrl}/statuses${environment.ext}`
-      : `${environment.apiUrl}/statuses`;
-    return this.http.get<Status[]>(url);
+    return this.http.get<Status[]>(`${environment.apiUrl}/statuses`);
   }
 
   changeTicketStatus(ticketId: number, statusId: number): Observable<void> {
@@ -262,11 +173,6 @@ export class TicketsService {
   }
 
   createTicket(payload: CreateTicketRequest): Observable<CreateTicketResponse> {
-    if (environment.ext) {
-      return this.http.get<CreateTicketResponse>(
-        `${environment.apiUrl}/tickets.create${environment.ext}`,
-      );
-    }
     return this.http.post<CreateTicketResponse>(
       `${environment.apiUrl}/tickets`,
       payload,

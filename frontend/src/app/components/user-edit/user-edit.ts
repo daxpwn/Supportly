@@ -24,7 +24,6 @@ export class UserEditComponent {
   readonly error = signal('');
   readonly departments = signal<Department[]>([]);
 
-  // Role nemaju backend endpoint — fiksne vrednosti iz seed-a (id-jevi iz baze).
   readonly roles = [
     { id: 1, name: 'admin' },
     { id: 2, name: 'agent' },

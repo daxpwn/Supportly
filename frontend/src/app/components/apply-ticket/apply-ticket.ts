@@ -80,7 +80,6 @@ export class ApplyTicketComponent {
           }
 
           if (!res?.id) {
-            // Tiket je kreiran, ali backend nije vratio id (npr. nije restartovan) — bez priloga.
             this.submitting.set(false);
             this.toastr.warning('Tiket je kreiran, ali prilozi nisu mogli da se zakače.');
             this.router.navigate(['/my-tickets']);
@@ -92,7 +91,6 @@ export class ApplyTicketComponent {
           ).subscribe({
             next: () => this.finishSuccess(),
             error: (err) => {
-              // Tiket je kreiran, ali prilog nije prošao — ne gubimo tiket.
               this.submitting.set(false);
               this.toastr.warning('Tiket je kreiran, ali prilog nije otpremljen.');
               this.router.navigate(['/my-tickets']);

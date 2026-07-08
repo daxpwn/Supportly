@@ -33,7 +33,6 @@ export class AuthService {
     return (this.getProfile()?.['role'] as string | undefined) ?? null;
   });
 
-  // Deljeni poziv /auth/refresh — svi paralelni 401 čekaju isti refresh.
   private refreshInFlight$: Observable<string> | null = null;
 
   private hasToken(): boolean {
@@ -65,8 +64,6 @@ export class AuthService {
     return this.isBrowser ? localStorage.getItem(AuthService.REFRESH_KEY) : null;
   }
 
-  // Razmeni refresh token za novi par (backend invalidira stari JWT+refresh).
-  // Single-flight: dok jedan refresh traje, ostali pozivi dele isti Observable.
   refresh(): Observable<string> {
     if (this.refreshInFlight$) return this.refreshInFlight$;
 

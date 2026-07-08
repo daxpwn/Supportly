@@ -85,7 +85,6 @@ export class AuditLogComponent {
       .getLogs({
         username: this.username().trim() || undefined,
         useCaseName: this.useCaseName().trim() || undefined,
-        // 'to' pokriva ceo izabrani dan (do 23:59:59)
         from: this.from() ? `${this.from()}T00:00:00` : undefined,
         to: this.to() ? `${this.to()}T23:59:59` : undefined,
         page: this.currentPage(),

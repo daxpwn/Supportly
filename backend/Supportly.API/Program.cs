@@ -1,6 +1,7 @@
 using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -103,6 +104,28 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
+
+// Primeni EF migracije na startu (bitno za Docker / svežu bazu).
+// Retry jer SQL Server kontejneru treba par sekundi da postane spreman.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<LabDbContext>();
+    var retries = 12;
+    while (true)
+    {
+        try
+        {
+            db.Database.Migrate();
+            Console.WriteLine("Migracije primenjene.");
+            break;
+        }
+        catch (Exception ex) when (retries-- > 0)
+        {
+            Console.WriteLine($"Baza nije spremna, pokusavam ponovo za 5s... ({ex.Message})");
+            System.Threading.Thread.Sleep(5000);
+        }
+    }
+}
 
 // Configure the HTTP request pipeline.
 

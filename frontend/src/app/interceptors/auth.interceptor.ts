@@ -26,12 +26,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         req.url.includes('/auth/refresh') ||
         req.url.includes('/auth/logout');
 
-      // Na istekao JWT (401) probaj jednom da osvežiš token pa ponovi zahtev.
+      // JWT
       if (err.status === 401 && !isAuthCall && auth.getRefreshToken()) {
         return auth.refresh().pipe(
           switchMap((newToken) => next(withToken(req, newToken))),
           catchError((refreshErr) => {
-            // Refresh nije uspeo — sesija je već obrisana u AuthService.
             router.navigate(['/login']);
             return throwError(() => refreshErr);
           }),

@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 
 interface ServiceItem {
-  /** Position class that drives the icon background in the template CSS. */
   variant: string;
   title: string;
   text: string;
 }
 
-/** "Everything Your Support Team Needs" features section. */
 @Component({
   selector: 'app-services',
   templateUrl: './services.html',

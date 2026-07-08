@@ -10,10 +10,8 @@ import { AuthService } from '../../services/auth.service';
 export class ProfileComponent {
   private readonly auth = inject(AuthService);
 
-  /** Svi claim-ovi iz JWT tokena (null dok se ne pročita u browseru). */
   readonly profile = signal<Record<string, unknown> | null>(null);
 
-  /** Najčešća imena claim-ova za prikaz, sa fallback-ovima (.NET/standard JWT). */
   readonly name = computed(() =>
     this.pick(['name', 'given_name', 'unique_name', 'preferred_username']),
   );
@@ -32,7 +30,6 @@ export class ProfileComponent {
     ]),
   );
 
-  /** Unix-sekunde -> milisekunde za DatePipe, ili null ako nema. */
   readonly issuedAt = computed(() => this.toDate(this.profile()?.['iat']));
   readonly expiresAt = computed(() => this.toDate(this.profile()?.['exp']));
 
@@ -42,7 +39,6 @@ export class ProfileComponent {
     });
   }
 
-  /** Prvi claim koji postoji iz liste mogućih ključeva. */
   private pick(keys: string[]): string {
     const p = this.profile();
     if (!p) return '—';

@@ -45,7 +45,6 @@ export class SignupComponent {
       return;
     }
 
-    // Ista pravila kao backend validator: min 8, veliko + malo slovo, cifra, specijalni znak.
     const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
     if (!passwordPattern.test(this.password)) {
       this.error.set(
@@ -68,7 +67,6 @@ export class SignupComponent {
       })
       .subscribe({
         next: () => {
-          // Backend ne vraća token — nalog je kreiran, korisnik se sad prijavljuje.
           this.toastr.success('Nalog je kreiran. Prijavite se.');
           this.router.navigate(['/login']);
         },

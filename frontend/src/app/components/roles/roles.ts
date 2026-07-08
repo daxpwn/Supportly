@@ -15,14 +15,12 @@ export class RolesComponent {
   readonly loading = signal(true);
   readonly error = signal('');
 
-  // Izbor iz dropdown-a po roli (roleId -> useCaseId za dodavanje)
   readonly selected = signal<Record<number, string>>({});
 
   constructor() {
     afterNextRender(() => this.load());
   }
 
-  // Use case-ovi iz kataloga koje rola još nema (za dropdown)
   availableFor(role: RoleWithUseCases): string[] {
     return this.catalog().filter((uc) => !role.useCaseIds.includes(uc));
   }

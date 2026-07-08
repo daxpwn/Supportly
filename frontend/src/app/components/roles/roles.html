@@ -48,7 +48,7 @@
             <!-- Dodavanje nove dozvole -->
             <div class="flex items-center gap-2 border-t border-gray-100 pt-3">
               <select
-                [value]="selected()[role.id] ?? ''"
+                [value]="selected()[role.id]"
                 (change)="onSelect(role.id, $any($event.target).value)"
                 class="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none">
                 <option value="">— izaberi use case —</option>

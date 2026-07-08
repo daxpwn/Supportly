@@ -1,0 +1,20 @@
+# Angular build cache (može biti i u root-u i u frontend/)
+.angular/
+**/.angular/cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+**/node_modules/
+
+# Build output
+**/dist/
+**/bin/
+**/obj/
+
+# Logs
+*.log
+npm-debug.log*

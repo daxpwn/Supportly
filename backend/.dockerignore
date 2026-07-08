@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/.idea/
+**/*.user
+Dockerfile
+.dockerignore
+**/appsettings.*.local.json
+**/wwwroot/Uploads/*
+.git/
+.DS_Store

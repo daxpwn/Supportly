@@ -19,7 +19,6 @@ export class TicketDetailComponent {
   private readonly auth = inject(AuthService);
   private readonly toastr = inject(ToastrService);
 
-  // Interni komentar i promena statusa: samo osoblje (admin/agent), ne i klijent.
   readonly isStaff = computed(() => this.auth.role() !== 'customer');
 
   readonly ticket = signal<TicketDetail | null>(null);
@@ -47,7 +46,6 @@ export class TicketDetailComponent {
       this.ticketId = Number(this.route.snapshot.paramMap.get('id'));
       this.loadTicket();
 
-      // Lista statusa iz baze — treba samo osoblju za dropdown.
       if (this.isStaff()) {
         this.ticketsService.getStatuses().subscribe({
           next: (list) => { this.statuses.set(list); this.syncSelectedStatus(); },
